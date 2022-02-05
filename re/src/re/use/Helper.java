@@ -64,8 +64,29 @@ public class Helper implements Appl{
             return null;
         }
     }
+    public static IASTTranslationUnit getAtu(
+            FileContent reader,
+            ScannerInfo scanInfo,
+            IncludeFileContentProvider fileCreator,
+            IParserLogService log,
+            IIndex index,
+            int options) {
+        try {
+        return GPPLanguage.getDefault().getASTTranslationUnit(reader, scanInfo, fileCreator, index, options, log);
+    } catch (Exception e) {
+        System.out.println("failed to load: "+ reader.getFileLocation());
+//            e.printStackTrace();
+        return null;
+    }
+}
+
     public static IASTTranslationUnit getAtu(String fullPath) {
         return getAtu(fullPath,new ScannerInfo(),IncludeFileContentProvider.getSavedFilesProvider(), new DefaultLogService(), null,0);
+    }
+
+    public static IASTTranslationUnit getAtu(String path, String content) {
+        FileContent reader = FileContent.create(path,content.toCharArray());
+        return getAtu(reader, new ScannerInfo(), IncludeFileContentProvider.getSavedFilesProvider(), new DefaultLogService(),null,0);
     }
 
     public static IASTTranslationUnit getAtu(String fullPath, Map<String, String> macros, String[] includes) {

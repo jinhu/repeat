@@ -10,8 +10,8 @@
 		<xtextVersion>2.23.0</xtextVersion>
 		<mwe2Version>2.11.3</mwe2Version>
 		<project.build.sourceEncoding>windows-1252</project.build.sourceEncoding>
-		<maven.compiler.source>17</maven.compiler.source>
-		<maven.compiler.target>17</maven.compiler.target>
+		<maven.compiler.source>15</maven.compiler.source>
+		<maven.compiler.target>15</maven.compiler.target>
 		<tycho-version>1.7.0</tycho-version>
 		<platformSystemProperties></platformSystemProperties>
 		<moduleProperties></moduleProperties>

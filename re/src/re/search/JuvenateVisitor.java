@@ -1,10 +1,8 @@
-package re.write;
+package re.search;
 
 import org.eclipse.cdt.core.dom.ast.ASTVisitor;
 import org.eclipse.cdt.core.dom.ast.IASTDeclaration;
-import org.eclipse.cdt.core.dom.ast.IASTFunctionDeclarator;
 import org.eclipse.cdt.core.dom.ast.cpp.ICPPASTFunctionDeclarator;
-import org.eclipse.cdt.internal.core.dom.parser.ASTAmbiguousNode;
 
 public class JuvenateVisitor extends ASTVisitor {
 

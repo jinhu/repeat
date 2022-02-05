@@ -1,4 +1,4 @@
-package re.write;
+package re.search;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,9 +10,14 @@ import org.eclipse.cdt.core.dom.ast.cpp.ICPPASTIfStatement;
 
 public class RefactorVisitor extends ASTVisitor {
 
-	private List<ICPPASTIfStatement> replacements = new ArrayList<>();
-	private List<ICPPASTIfStatement> removements= new ArrayList<>();
-	private List<ICPPASTFunctionCallExpression> custom = new ArrayList<>();
+	public List<ICPPASTIfStatement> replacements = new ArrayList<>();
+	List<ICPPASTIfStatement> removements= new ArrayList<>();
+	List<ICPPASTFunctionCallExpression> custom = new ArrayList<>();
+
+	public RefactorVisitor() {
+		this.shouldVisitTranslationUnit =true;
+		this.shouldVisitDeclarations =true;
+	}
 
 	@Override
 	public int visit(IASTStatement statement) {

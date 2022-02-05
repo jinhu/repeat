@@ -30,6 +30,22 @@
 			<groupId>org.ow2.asm</groupId>
 			<artifactId>asm-tree</artifactId>
 		</dependency>
+        <dependency>
+            <groupId>com.google.inject</groupId>
+            <artifactId>guice</artifactId>
+        </dependency>
+		<dependency>
+			<groupId>org.eclipse.xtext</groupId>
+			<artifactId>org.eclipse.xtext.ide</artifactId>
+			<version>2.25.0</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>re</groupId>
+			<artifactId>re</artifactId>
+			<version>0.1.0</version>
+			<scope>compile</scope>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>

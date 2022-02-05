@@ -6,7 +6,7 @@ import re.load.Loader;
 import re.use.Appl;
 import re.use.Helper;
 import re.view.Naissancer;
-import re.write.Juvenal;
+import re.search.Juvenal;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -17,7 +17,7 @@ public class Controller {
 
     private Map<String, Object> apps = Map.of(
             "replace",  new Naissancer(),
-            "juvenate",   new Juvenal(null),
+            "juvenate",   new Juvenal(),
             "load"    ,   new Loader(),
             "serve"   ,   new Server()
             );

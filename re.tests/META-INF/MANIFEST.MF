@@ -13,3 +13,4 @@ Require-Bundle: re,
  org.eclipse.xtext.xbase.lib;bundle-version="2.14.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Export-Package: re.factor.tests;x-internal=true
+Import-Package: org.eclipse.cdt.core.dom.ast
