@@ -1,0 +1,104 @@
+grammar re.factor.Model with org.eclipse.xtext.common.Terminals
+
+generate model "http://jinmin.hu/re/model"
+
+RefactorModel:
+	version = Version
+	refactor = Refactor
+	cleanup = Cleanup	
+;
+
+
+Cleanup:
+	modifications += Modification
+;
+
+Modification:
+	Remove|Replace|Custom
+;
+
+Custom:
+	rule = ID
+;
+
+Remove:
+	"remove{"
+		removeble = STRING
+	"}"
+;
+
+Replace:
+	"replace{"
+		original=STRING
+	"}with{"
+		replacement=STRING
+	"}"
+;
+
+Refactor:
+	"refactor"
+	"{"
+	modifications += Modification
+	"}"
+;
+
+Version:
+	"#include" '"re.factor-0.1.h"'
+;
+	
+
+MakefileModel:
+	targets += Target
+;
+
+Target:
+	name=STRING":"
+	commands+=Command
+;
+
+Command:
+	name=STRING	
+;
+
+
+Context:
+	name = STRING
+	environment = STRING
+	containers += Container
+;
+
+Container:
+	name = STRING
+	type = STRING
+	components += Component
+	
+;
+
+Component:
+	name = STRING
+	type = STRING
+	codes += Code	
+;
+
+Code:
+	scope = STRING
+	classes += Class	
+	functions += Function
+;
+
+Function:
+	arguments += Variable
+	return = Variable
+	calls += Function
+;
+
+Class:
+	fields += Variable
+	members += Function	
+;
+
+Variable:
+	name=STRING
+	type=STRING
+;
+

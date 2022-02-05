@@ -1,0 +1,5 @@
+*.class
+.idea
+.metadata
+src-gen
+xtend-gen

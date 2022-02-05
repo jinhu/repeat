@@ -1,0 +1,17 @@
+grammar re.factor.Model with org.eclipse.xtext.common.Terminals
+
+generate model "http://jinmin.hu/ast/makefile"
+
+MakefileModel:
+	targets += Target
+;
+
+Target:
+	name=STRING":"
+	commands+=Command
+;
+
+Command:
+	name=STRING	
+;
+
