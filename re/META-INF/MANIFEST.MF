@@ -1,0 +1,35 @@
+Manifest-Version: 1.0
+Automatic-Module-Name: re
+Bundle-ManifestVersion: 2
+Bundle-Name: re
+Bundle-Vendor: Hu Jinmin
+Bundle-Version: 0.1.0
+Bundle-SymbolicName: re; singleton:=true
+Bundle-ActivationPolicy: lazy
+Require-Bundle: org.antlr.runtime;bundle-version="[3.2.0,3.2.1)",
+ org.apache.felix.scr,
+ org.eclipse.core.runtime,
+ org.eclipse.core.resources,
+ org.eclipse.cdt.core;bundle-version="5.11.0",
+ org.eclipse.emf.ecore,
+ org.eclipse.emf.common,
+ org.eclipse.equinox.common;bundle-version="3.5.0",
+ org.eclipse.equinox.event,
+ org.eclipse.ltk.core.refactoring,
+ org.eclipse.text,
+ org.eclipse.xtext;bundle-version="2.14.0",
+ org.eclipse.xtext.xbase.lib;bundle-version="2.14.0",
+ org.eclipse.xtext.util
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Export-Package: re.factor.model,
+ re.factor.parser.antlr.internal,
+ re.factor.services,
+ re.factor.validation,
+ re.factor.scoping,
+ re.factor,
+ re.factor.serializer,
+ re.factor.parser.antlr,
+ re.factor.model.impl,
+ re.factor.generator,
+ re.factor.model.util
+Import-Package: org.apache.log4j
