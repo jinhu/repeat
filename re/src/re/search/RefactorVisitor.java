@@ -9,15 +9,13 @@ import org.eclipse.cdt.core.dom.ast.cpp.ICPPASTFunctionCallExpression;
 import org.eclipse.cdt.core.dom.ast.cpp.ICPPASTIfStatement;
 
 public class RefactorVisitor extends ASTVisitor {
+	public RefactorVisitor() {
+		super(true);
+	}
 
 	public List<ICPPASTIfStatement> replacements = new ArrayList<>();
 	List<ICPPASTIfStatement> removements= new ArrayList<>();
 	List<ICPPASTFunctionCallExpression> custom = new ArrayList<>();
-
-	public RefactorVisitor() {
-		this.shouldVisitTranslationUnit =true;
-		this.shouldVisitDeclarations =true;
-	}
 
 	@Override
 	public int visit(IASTStatement statement) {

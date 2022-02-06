@@ -1,6 +1,8 @@
+
 package re.factor;
 
 import org.eclipse.cdt.core.CProjectNature;
+import org.eclipse.cdt.core.dom.ast.ASTVisitor;
 import org.eclipse.cdt.core.dom.ast.IASTTranslationUnit;
 import org.eclipse.cdt.core.dom.rewrite.ASTRewrite;
 import org.eclipse.cdt.core.model.*;
@@ -15,6 +17,9 @@ import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.common.util.BasicMonitor.Printing;
 import org.eclipse.ltk.core.refactoring.Change;
 import org.osgi.framework.BundleContext;
+
+import re.search.Juvenal;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Arrays;
@@ -26,17 +31,17 @@ public class WorkspaceVisitor  {
 
     private ICModel cModel;
 	private IProgressMonitor progressMonitor;
+	private Juvenal visitor;
+	private ASTRewrite rewrite;
+	private String refactor;
 
 	public void visitWorkspace() throws Exception {
-        var mainWorkspace = ResourcesPlugin.getWorkspace();
-        var desc = mainWorkspace.getDescription();
-        desc.setAutoBuilding(true);
-        mainWorkspace.setDescription(desc);
-
-        cModel = CoreModel.getDefault().getCModel();
+		visitor = new Juvenal( "c:\\sw-dev\\re\\config\\refactor.c");
+		cModel = CoreModel.getDefault().getCModel();
         progressMonitor = BasicMonitor.toIProgressMonitorWithBlocking(new Printing(System.out));
         var projects = Arrays.stream(cModel.getCProjects());
         projects.forEach(this::visitProject);
+		
     }
 
     private void visitProject(ICProject project) {
@@ -51,17 +56,23 @@ public class WorkspaceVisitor  {
 
     private void visitSource(ISourceRoot source) {
         try {
-            var ice = source.getChildren()[0];
-            var tu = (ITranslationUnit) ice;
-            var atu = tu.getAST();
-            ASTRewrite rewrite = ASTRewrite.create(atu);
-            atu.accept(new SampleVisitor(rewrite));
+            var atu = getAtuFromSource(source);
+            rewrite = ASTRewrite.create(atu);
+    		visitor.setRewriter(rewrite);
+            atu.accept(visitor);
             Change c = rewrite.rewriteAST();
-//        c.perform(progressMonitor);
+            c.perform(progressMonitor);
         } catch (CoreException e) {
             e.printStackTrace();
         }
     }
+
+	private IASTTranslationUnit getAtuFromSource(ISourceRoot source) throws CModelException, CoreException {
+		var ice = source.getChildren()[0];
+		var tu = (ITranslationUnit)ice;
+		var atu = tu.getAST();
+		return atu;
+	}
 
     private void createProject(IProgressMonitor progressMonitor, IWorkspaceRoot root) {
         IProject project = root.getProject("NewProject");

@@ -17,7 +17,7 @@ public class Controller {
 
     private Map<String, Object> apps = Map.of(
             "replace",  new Naissancer(),
-            "juvenate",   new Juvenal(),
+            "juvenate",   new Juvenal(""),
             "load"    ,   new Loader(),
             "serve"   ,   new Server()
             );
