@@ -6,10 +6,10 @@ if(true){
 	WHAVSPTH_TRACE_OUT(result);
 	WHAVSPER_LC(result, WHXT_SYSTEM_ERROR);
 }else{
- replaced(4,5,6);
- sensor_valid_ptr = &ch_mc_ptr->sensor_valid;
+ replaced_wuth(multiple, lines);
+ var x = ch_mc_ptr->sensor_valid;
 }
-
+/*
 if(true){
 	if (OK == result)
    {
@@ -32,8 +32,8 @@ if(true){
 if(true){
 	WHAVSPER_LC(result, WHXT_SYSTEM_ERROR);
 }	
-
-
+*/
+}
 void clean_up(){
 
 }

@@ -1,11 +1,14 @@
 package re.search;
 
 import java.io.IOException;
+import java.util.Iterator;
 
 import org.eclipse.cdt.core.dom.ast.ASTVisitor;
+import org.eclipse.cdt.core.dom.ast.IASTCompoundStatement;
 import org.eclipse.cdt.core.dom.ast.IASTNode;
 import org.eclipse.cdt.core.dom.ast.IASTStatement;
 import org.eclipse.cdt.core.dom.ast.IASTTranslationUnit;
+import org.eclipse.cdt.core.dom.ast.cpp.ICPPASTCompoundStatement;
 import org.eclipse.cdt.core.dom.rewrite.ASTRewrite;
 import org.eclipse.cdt.internal.core.dom.parser.cpp.CPPASTFunctionCallExpression;
 import org.eclipse.core.runtime.CoreException;
@@ -28,10 +31,6 @@ public class Juvenal extends ASTVisitor implements Appl {
         configure(config);
     }
 	
-    public static void main(String[] args) throws IOException {
-    	var juvenal = new Juvenal(args[0]);
-    }
-
 	public void configure(String refactor) {
         model = re.use.Helper.getAtu(refactor);
         visitor =new JuvenateVisitor();
@@ -40,30 +39,63 @@ public class Juvenal extends ASTVisitor implements Appl {
     
     @Override
     public int visit(IASTStatement statement) {
-//    	if (statement instanceof ICPPASTCompoundStatement block) {
-        	replace(statement);
+    	if (statement instanceof ICPPASTCompoundStatement block) {
+        	replace(block);
 //        	remove(statement);
 //			
 //		}else {
 //	    	process(statement);			
-//		}
+		}
     	return super.visit(statement);
     }
 
-	private void replace(IASTStatement first) {
+	private void replace(IASTCompoundStatement parent) {
+		
+		var statements = parent.getChildren();
 		
 		for(var replacement : visitor.refactor.replacements) {
-			var find = replacement.getThenClause().getChildren()[0];
-			if(find.getRawSignature().equals(first.getRawSignature())){ 
-				var rew = rewriter.replace(first, replacement.getElseClause().getChildren()[0], null);
-				return;
+			var finds = replacement.getThenClause().getChildren();
+			var newStats = replacement.getElseClause().getChildren();
+			if(statements.length<finds.length) {
+				break;
 			}
+			try {	
+			for (int i = 0; i < statements.length; i++) {
+				var matchAll= true;
+				for (int j = 0; j < finds.length; j++) {
+					if(finds[j].getRawSignature().equals(statements[i+j].getRawSignature())==false){ 
+						matchAll =false;
+						break;
+					}
+				}
+				if(matchAll) {
+					IASTNode instert =null;
+					if(statements.length<+finds.length) {
+						instert =statements[i+finds.length];
+					}
+					for (int j = 0; j < newStats.length; j++) {
+						rewriter.insertBefore(parent, instert, newStats[j], null); // ((statement[i+j], null);
+					}	
+					for (int j = 0; j < finds.length; j++) {
+						rewriter.remove(statements[i+j], null);
+					}
+					i+=finds.length;
+				}
+			}
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+//			var find = replacement.getThenClause().getChildren()[0];
+//			if(find.getRawSignature().equals(first.getRawSignature())){ 
+//				var rew = rewriter.replace(first, replacement.getElseClause().getChildren()[0], null);
+//				return;
+//			}
 //			var replaceTarget = expandReference(parent.getChildren(),ref); 
 //			var replacement = replacement.getElseClause().getChildren();
 //		    rewriter.replace(statement, [0], null);
 //		    
-		}
-	}
 
 //	private Object expandReference(ICPPASTCompoundStatement parent, IASTNode[] ref) {
 //		var expandedRef = new ArrayList<IASTNode>();
