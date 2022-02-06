@@ -2,12 +2,12 @@
 
 void refactoring(){
 if(true){
-	xxx_TRACE_OUT( result );
+	xxx_TRACE_OUT( $result );
 	callTo( 1, 2, 3 );
-	ER_LC( result ,  WHXT_SYSTEM_ERROR );
+	ER_LC( $result ,  WHXT_SYSTEM_ERROR );
 }else{
- replaced_wuth(multiple, lines);
- var x = ch_mc_ptr->sensor_valid;
+ replaced_dynamic(multiple, lines);
+ var $result = ch_mc_ptr->sensor_valid;
 }
 /*
 if(true){

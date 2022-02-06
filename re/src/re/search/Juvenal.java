@@ -1,7 +1,9 @@
 package re.search;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import org.eclipse.cdt.core.dom.ast.ASTVisitor;
 import org.eclipse.cdt.core.dom.ast.IASTCompoundStatement;
@@ -17,9 +19,11 @@ import org.eclipse.cdt.internal.core.dom.parser.cpp.CPPASTFunctionCallExpression
 import org.eclipse.core.runtime.CoreException;
 
 import re.use.Appl;
+import re.use.Helper;
 
 public class Juvenal extends ASTVisitor implements Appl {
-    private IASTTranslationUnit model;
+    private HashMap<String, String> dynamic = new HashMap<>();
+	private IASTTranslationUnit model;
 	private JuvenateVisitor visitor;
 	private ASTRewrite rewriter;
     public Juvenal(String string) {
@@ -66,7 +70,7 @@ public class Juvenal extends ASTVisitor implements Appl {
 			for (int i = 0; i < statements.length; i++) {
 				var matchAll= true;
 				for (int j = 0; j < finds.length; j++) {
-					if(!compareNode(statements[i+j], finds[j])){ 
+					if(!compareNode(finds[j], statements[i+j] )){ 
 						matchAll =false;
 						break;
 					}
@@ -77,7 +81,11 @@ public class Juvenal extends ASTVisitor implements Appl {
 						instert =statements[i+finds.length];
 					}
 					for (int j = 0; j < newStats.length; j++) {
-						rewriter.insertBefore(parent, instert, newStats[j], null); // ((statement[i+j], null);
+						var text = newStats[j].getRawSignature();
+						for (var entry : dynamic.entrySet()) {
+							text = text.replace(entry.getKey(),entry.getValue());
+						}
+						rewriter.insertBefore(parent, instert,rewriter.createLiteralNode(text), null); // ((statement[i+j], null);
 					}	
 					for (int j = 0; j < finds.length; j++) {
 						rewriter.remove(statements[i+j], null);
@@ -90,117 +98,8 @@ public class Juvenal extends ASTVisitor implements Appl {
 			}
 		}
 	}
-//			var find = replacement.getThenClause().getChildren()[0];
-//			if(find.getRawSignature().equals(first.getRawSignature())){ 
-//				var rew = rewriter.replace(first, replacement.getElseClause().getChildren()[0], null);
-//				return;
-//			}
-//			var replaceTarget = expandReference(parent.getChildren(),ref); 
-//			var replacement = replacement.getElseClause().getChildren();
-//		    rewriter.replace(statement, [0], null);
-//		    
 
-//	private boolean compareStatement(IASTNode statement, IASTNode reference) {
-//		if(statement.getClass() == reference.getClass()) {
-//			if(statement.getChildren()[0] instanceof ICPPASTFunctionCallExpression targetFun
-//			&& reference.getChildren()[0] instanceof ICPPASTFunctionCallExpression referenceFun) {
-//				if(targetFun.getFunctionNameExpression().toString().equals( referenceFun.getFunctionNameExpression().toString())) {
-//					var targetArgs = targetFun.getArguments();
-//					var referenceArgs = referenceFun.getArguments();
-//					if(targetArgs.length !=referenceArgs.length) {
-//						return false;
-//					}
-//					for (int i = 0; i < targetArgs.length; i++) {
-//						if(!targetArgs[i].toString().equals(referenceArgs[i].toString())) {
-//							return false;
-//						}
-//					
-//					}
-//					return true;
-//			}
-//			}
-//			else if(statement.getChildren()[0] instanceof IASTSimpleDeclaration targetDecl
-//			     && reference.getChildren()[0] instanceof IASTSimpleDeclaration referenceDecl) {
-//
-//				var targetArgs = targetDecl.getDeclarators();
-//				var referenceArgs = referenceDecl.getDeclarators();
-//
-//				if(targetArgs.length !=referenceArgs.length) {
-//					return false;
-//				}
-//				
-//				for (int i = 0; i < targetArgs.length; i++) {
-//					if(!targetArgs[i].toString().equals(referenceArgs[i].toString())) {
-//						return false;
-//					}
-//				
-//				}
-//				return true;
-////					if(targetDecl`.getFunctionNameExpression().toString().equals( referenceFun.getFunctionNameExpression().toString())) {
-////								var targetArgs = targetFun.getArguments();
-////								var referenceArgs = referenceFun.getArguments();
-////								if(targetArgs.length !=referenceArgs.length) {
-////									return false;
-////								}
-////								for (int i = 0; i < targetArgs.length; i++) {
-////									if(!targetArgs[i].toString().equals(referenceArgs[i].toString())) {
-////										return false;
-////									}
-////								
-////								}
-////								return true;
-////					}
-//				return true;
-//			}
-//		}
-//		return false;
-//	}
-
-//	private Object expandReference(ICPPASTCompoundStatement parent, IASTNode[] ref) {
-//		var expandedRef = new ArrayList<IASTNode>();
-//		var base =  parent.getChildren();
-//		for (int i = 0; i < base.length; i++) {
-//			var allMatch = true;
-//			for (int j = 0; j < ref.length; j++) {
-//			
-//				if(ref[j].getClass()==base[i+j].getClass()) {
-//					//find wildcard
-//				}else {
-//					allMatch = false;
-//					break;
-//				}
-//			}
-//			if(allMatch) {
-//				return expandedRef;
-//			}
-//			
-//		}
-//		return ref;
-//	
-//	}
-
-//	private void process(IASTStatement statement) {
-//		
-//	}
-
-//	private void remove(IASTStatement statement) {
-//		for(var ifStatement: visitor.refactor.removements) {
-//			var remove = expand(ifStatement.getThenClause().getChildren(), statements);
-//		        rewriter.remove((rest, null);
-//		    }
-//		}		
-//	}
-
-
-    public static String getNode(IASTNode node) {
-        StringBuilder output = new StringBuilder();
-        if (node != null) {
-            processNode(output, "", node);
-        }
-        return output.toString();
-    }
-
-    private static boolean compareNode(IASTNode ref,  IASTNode target) {
+    private boolean compareNode(IASTNode ref,  IASTNode target) {
     	var refChildren = ref.getChildren();
     	var targetChildren = target.getChildren();
     	if(refChildren.length != targetChildren.length) {
@@ -213,10 +112,29 @@ public class Juvenal extends ASTVisitor implements Appl {
         }
 
         if(targetChildren.length==0) {
-    		return ref.toString().equals(target.toString());
+        	var refString = ref.toString();
+        	var targetString = target.toString();
+        	 
+        	if(refString.startsWith("$")) {
+        		if(!dynamic.containsKey(refString)) {
+        			dynamic.put(refString,targetString);
+        		}
+        		return dynamic.get(refString).equals(targetString);
+        	}else {
+        		return refString.equals(targetString);        		
+        	}
     	}
         return true;
     }
+
+    public static String getNode(IASTNode node) {
+        StringBuilder output = new StringBuilder();
+        if (node != null) {
+            processNode(output, "", node);
+        }
+        return output.toString();
+    }
+
 
     private static void processNode(StringBuilder output, String indent, IASTNode node) {
         String raw = node.getRawSignature();
