@@ -2,9 +2,9 @@
 
 void refactoring(){
 if(true){
-	callTo(1, 2, 3);
-	WHAVSPTH_TRACE_OUT(result);
-	WHAVSPER_LC(result, WHXT_SYSTEM_ERROR);
+	xxx_TRACE_OUT( result );
+	callTo( 1, 2, 3 );
+	ER_LC( result ,  WHXT_SYSTEM_ERROR );
 }else{
  replaced_wuth(multiple, lines);
  var x = ch_mc_ptr->sensor_valid;

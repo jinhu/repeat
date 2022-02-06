@@ -6,9 +6,12 @@ import java.util.Iterator;
 import org.eclipse.cdt.core.dom.ast.ASTVisitor;
 import org.eclipse.cdt.core.dom.ast.IASTCompoundStatement;
 import org.eclipse.cdt.core.dom.ast.IASTNode;
+import org.eclipse.cdt.core.dom.ast.IASTSimpleDeclaration;
 import org.eclipse.cdt.core.dom.ast.IASTStatement;
 import org.eclipse.cdt.core.dom.ast.IASTTranslationUnit;
 import org.eclipse.cdt.core.dom.ast.cpp.ICPPASTCompoundStatement;
+import org.eclipse.cdt.core.dom.ast.cpp.ICPPASTFunctionCallExpression;
+import org.eclipse.cdt.core.dom.ast.cpp.ICPPASTSimpleDeclSpecifier;
 import org.eclipse.cdt.core.dom.rewrite.ASTRewrite;
 import org.eclipse.cdt.internal.core.dom.parser.cpp.CPPASTFunctionCallExpression;
 import org.eclipse.core.runtime.CoreException;
@@ -63,7 +66,7 @@ public class Juvenal extends ASTVisitor implements Appl {
 			for (int i = 0; i < statements.length; i++) {
 				var matchAll= true;
 				for (int j = 0; j < finds.length; j++) {
-					if(finds[j].getRawSignature().equals(statements[i+j].getRawSignature())==false){ 
+					if(!compareNode(statements[i+j], finds[j])){ 
 						matchAll =false;
 						break;
 					}
@@ -96,6 +99,62 @@ public class Juvenal extends ASTVisitor implements Appl {
 //			var replacement = replacement.getElseClause().getChildren();
 //		    rewriter.replace(statement, [0], null);
 //		    
+
+//	private boolean compareStatement(IASTNode statement, IASTNode reference) {
+//		if(statement.getClass() == reference.getClass()) {
+//			if(statement.getChildren()[0] instanceof ICPPASTFunctionCallExpression targetFun
+//			&& reference.getChildren()[0] instanceof ICPPASTFunctionCallExpression referenceFun) {
+//				if(targetFun.getFunctionNameExpression().toString().equals( referenceFun.getFunctionNameExpression().toString())) {
+//					var targetArgs = targetFun.getArguments();
+//					var referenceArgs = referenceFun.getArguments();
+//					if(targetArgs.length !=referenceArgs.length) {
+//						return false;
+//					}
+//					for (int i = 0; i < targetArgs.length; i++) {
+//						if(!targetArgs[i].toString().equals(referenceArgs[i].toString())) {
+//							return false;
+//						}
+//					
+//					}
+//					return true;
+//			}
+//			}
+//			else if(statement.getChildren()[0] instanceof IASTSimpleDeclaration targetDecl
+//			     && reference.getChildren()[0] instanceof IASTSimpleDeclaration referenceDecl) {
+//
+//				var targetArgs = targetDecl.getDeclarators();
+//				var referenceArgs = referenceDecl.getDeclarators();
+//
+//				if(targetArgs.length !=referenceArgs.length) {
+//					return false;
+//				}
+//				
+//				for (int i = 0; i < targetArgs.length; i++) {
+//					if(!targetArgs[i].toString().equals(referenceArgs[i].toString())) {
+//						return false;
+//					}
+//				
+//				}
+//				return true;
+////					if(targetDecl`.getFunctionNameExpression().toString().equals( referenceFun.getFunctionNameExpression().toString())) {
+////								var targetArgs = targetFun.getArguments();
+////								var referenceArgs = referenceFun.getArguments();
+////								if(targetArgs.length !=referenceArgs.length) {
+////									return false;
+////								}
+////								for (int i = 0; i < targetArgs.length; i++) {
+////									if(!targetArgs[i].toString().equals(referenceArgs[i].toString())) {
+////										return false;
+////									}
+////								
+////								}
+////								return true;
+////					}
+//				return true;
+//			}
+//		}
+//		return false;
+//	}
 
 //	private Object expandReference(ICPPASTCompoundStatement parent, IASTNode[] ref) {
 //		var expandedRef = new ArrayList<IASTNode>();
@@ -139,6 +198,24 @@ public class Juvenal extends ASTVisitor implements Appl {
             processNode(output, "", node);
         }
         return output.toString();
+    }
+
+    private static boolean compareNode(IASTNode ref,  IASTNode target) {
+    	var refChildren = ref.getChildren();
+    	var targetChildren = target.getChildren();
+    	if(refChildren.length != targetChildren.length) {
+    		return false;
+    	}
+        for (int i = 0; i < targetChildren.length; i++) {
+			if(!compareNode(refChildren[i], targetChildren[i])){
+				return false;
+			}
+        }
+
+        if(targetChildren.length==0) {
+    		return ref.toString().equals(target.toString());
+    	}
+        return true;
     }
 
     private static void processNode(StringBuilder output, String indent, IASTNode node) {
