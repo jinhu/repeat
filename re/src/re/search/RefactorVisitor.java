@@ -1,6 +1,8 @@
 package re.search;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -8,7 +10,6 @@ import org.eclipse.cdt.core.dom.ast.ASTVisitor;
 import org.eclipse.cdt.core.dom.ast.IASTCompoundStatement;
 import org.eclipse.cdt.core.dom.ast.IASTNode;
 import org.eclipse.cdt.core.dom.ast.IASTStatement;
-import org.eclipse.cdt.core.dom.ast.cpp.ICPPASTCompoundStatement;
 import org.eclipse.cdt.core.dom.ast.cpp.ICPPASTFunctionCallExpression;
 import org.eclipse.cdt.core.dom.ast.cpp.ICPPASTIfStatement;
 import org.eclipse.cdt.core.dom.rewrite.ASTRewrite;
@@ -19,7 +20,6 @@ public class RefactorVisitor extends ASTVisitor {
 	}
 
 	public List<ICPPASTIfStatement> replacements = new ArrayList<>();
-	List<ICPPASTIfStatement> removements= new ArrayList<>();
 	List<ICPPASTFunctionCallExpression> custom = new ArrayList<>();
 	private HashMap<String, String> dynamic = new HashMap<>();
 
@@ -35,18 +35,19 @@ public class RefactorVisitor extends ASTVisitor {
 		return super.visit(statement);
 	}
 
-	public void replace(IASTCompoundStatement block, ASTRewrite rewrite) {
+	public void replace(ASTRewrite rewrite, IASTCompoundStatement block) {
 		for (var replacement : replacements) {
 			var start = 0;
 			var totalStatement = block.getChildren().length;
 			int seachLength = replacement.getThenClause().getChildren().length;
 			while (start >= 0 && start + seachLength <= totalStatement) {
 				start = containNode(replacement.getThenClause(), block, start);
+
 				if (start >= 0) {
+					removeStatement(rewrite, Arrays.copyOfRange(block.getStatements(), start-seachLength+1, start+1) );
 					if(replacement.getElseClause()!=null) {
 						replaceNewStatements(rewrite, block, replacement.getElseClause().getChildren(), start + 1);
 					}
-					removeStatement(rewrite, replacement.getThenClause().getChildren());
 				}
 				dynamic.clear();
 			}
@@ -56,24 +57,24 @@ public class RefactorVisitor extends ASTVisitor {
 	private void removeStatement(ASTRewrite rewriter, IASTNode[] finds) {
 		for (int j = 0; j < finds.length; j++) {
 //			rewrite.remove(statements[start - j], null);
-			String text = replaceDynanic(finds[j]);
-			rewriter.remove(rewriter.createLiteralNode(text), null);
+			
+			rewriter.remove(finds[j], null);
 		}
 	}
 
 	private void replaceNewStatements(ASTRewrite rewriter, IASTCompoundStatement parent, IASTNode[] newStats, int insertOffset) {
 			IASTNode instert = null;
-			if (parent.getChildren().length < insertOffset) {
+			if (parent.getChildren().length > insertOffset) {
 				instert = parent.getChildren()[insertOffset];
 			}
 
 			for (int j = 0; j < newStats.length; j++) {
-				String text = replaceDynanic(newStats[j]);
+				String text = replaceDynamic(newStats[j] );
 				rewriter.insertBefore(parent, instert, rewriter.createLiteralNode(text), null);
 			}
 		}
 
-	private String replaceDynanic(IASTNode newStat) {
+	private String replaceDynamic(IASTNode newStat) {
 		var text = newStat.getRawSignature();
 		for (var entry : dynamic.entrySet()) {
 			text = text.replace(entry.getKey(), entry.getValue());
