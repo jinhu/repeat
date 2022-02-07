@@ -1,6 +1,7 @@
 #include "re.factor-0.1.h"
 
 void refactoring(){
+	int $result = 0;
 if(true){
 	xxx_TRACE_OUT( $result );
 	$$statement;
@@ -13,10 +14,42 @@ if(true){
 if(true){
 	if (OK == result)
    {
+		int result  = 0;
 	xxx_TRACE_OUT( result );
+      result = WHAVSPMC_get_ch_constants(&ch_mc_ptr);
 	callTo( 1, 2, 3 );
 	ER_LC( result ,  WHXT_SYSTEM_ERROR );
+      result = WHAVSPMC_get_ch_constants(mc_ptr);
+      result = WHAVSPMC_get_ch_constants(ch_ptr);
+	xxx_TRACE_OUT( result );
+	callTo( 1, 2, 3 );
       result = WHAVSPMC_get_ch_constants(&ch_mc_ptr);
+	ER_LC( result ,  WHXT_SYSTEM_ERROR );
+	int xsss = 0;
+   
+	   
+	xxx_TRACE_OUT( result );
+      result = WHAVSPMC_get_ch_constants(&ch_mc_ptr);
+	callTo( 1, 2, 3 );
+      result = WHAVSPMC_get_ch_constants(&ch_mc_ptr);
+      result = WHAVSPMC_get_ch_constants(&ch_mc_ptr);
+	callTo( 1, 2, 3 );
+      result = WHAVSPMC_get_ch_constants(&ch_mc_ptr);
+	ER_LC( result ,  WHXT_SYSTEM_ERROR );
+
+      result = WHAVSPMC_get_ch_constants(&ch_mc_ptr);
+	int x  = 0;
+	xxx_TRACE_OUT( result );
+      result = WHAVSPMC_get_ch_constants(&ch_mc_ptr);
+	callTo( 1, 2, 3 );
+	ER_LC( result ,  WHXT_SYSTEM_ERROR );
+      result = WHAVSPMC_get_ch_constants(mc_ptr);
+      result = WHAVSPMC_get_ch_constants(ch_ptr);
+	xxx_TRACE_OUT( result );
+	callTo( 1, 2, 3 );
+      result = WHAVSPMC_get_ch_constants(&ch_mc_ptr);
+	ER_LC( result ,  WHXT_SYSTEM_ERROR );
+	int xsss = 0;
    }
 }else{
       result = WHAVSPMC_get_ch_constants(&ch_mc_ptr);

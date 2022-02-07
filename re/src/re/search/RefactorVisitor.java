@@ -1,6 +1,5 @@
 package re.search;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -23,6 +22,7 @@ public class RefactorVisitor extends ASTVisitor {
 	List<ICPPASTFunctionCallExpression> custom = new ArrayList<>();
 	private HashMap<String, String> dynamic = new HashMap<>();
 	private HashMap<String, IASTNode> dynamicStatements = new HashMap<>();
+	private HashMap<String, List<IASTNode>> dynamicLists = new HashMap<>();
 
 	@Override
 	public int visit(IASTStatement statement) {
@@ -38,28 +38,27 @@ public class RefactorVisitor extends ASTVisitor {
 
 	public void replace(ASTRewrite rewrite, IASTCompoundStatement block) {
 		for (var replacement : replacements) {
-			var start = 0;
+			var start = new int[] {0,0};
 			var totalStatement = block.getChildren().length;
 			int seachLength = replacement.getThenClause().getChildren().length;
-			while (start >= 0 && start + seachLength <= totalStatement) {
-				start = containNode(replacement.getThenClause(), block, start);
+			while (start.length >= 0 && start[1] + seachLength <= totalStatement) {
+				start = containNode(replacement.getThenClause(), block, start[1]+1);
 
-				if (start >= 0) {
-					removeStatement(rewrite, Arrays.copyOfRange(block.getStatements(), start-seachLength+1, start+1) );
+				if (start.length > 0) {
+					removeStatement(rewrite, Arrays.copyOfRange(block.getStatements(), start[0], start[1]+1) );
 					if(replacement.getElseClause()!=null) {
-						replaceNewStatements(rewrite, block, replacement.getElseClause().getChildren(), start + 1);
+						replaceNewStatements(rewrite, block, replacement.getElseClause().getChildren(), start[1] + 1);
 					}
 				}
 				dynamic.clear();
+				dynamicLists.clear();
 			}
 		}
 	}
 
 	private void removeStatement(ASTRewrite rewriter, IASTNode[] finds) {
-		for (int j = 0; j < finds.length; j++) {
-//			rewrite.remove(statements[start - j], null);
-			
-			rewriter.remove(finds[j], null);
+		for (var find : finds) {
+			rewriter.remove(find, null);
 		}
 	}
 
@@ -69,9 +68,21 @@ public class RefactorVisitor extends ASTVisitor {
 				instert = parent.getChildren()[insertOffset];
 			}
 
-			for (int j = 0; j < newStats.length; j++) {
-				String text = replaceDynamic(newStats[j] );
-				rewriter.insertBefore(parent, instert, rewriter.createLiteralNode(text), null);
+			for (var newStat : newStats) {
+				var text = newStat.getRawSignature();
+				if(text.startsWith("$")) {
+					var statments = dynamicLists.get(text);
+					for(var statement : statments ) {
+						rewriter.insertBefore(parent, instert, statement, null);
+						
+					}
+				}else if(text.contains("$")) {
+					text = replaceDynamic(newStat);
+					rewriter.insertBefore(parent, instert, rewriter.createLiteralNode(text), null);
+					
+				}else {
+					rewriter.insertBefore(parent, instert, newStat, null);
+				}
 			}
 		}
 
@@ -85,41 +96,56 @@ public class RefactorVisitor extends ASTVisitor {
 
 
 
-	private int containNode(IASTNode ref,  IASTNode target,int offset) {
+	private int[] containNode(IASTNode ref,  IASTNode target,int offset) {
     	var refChildren = ref.getChildren();
     	var targetChildren = target.getChildren();
     	if(offset+refChildren.length > targetChildren.length) {
-    		return -1;
+    		return new int[0];
     	}
+
     	int j=0;
+    	ArrayList<IASTNode> statList = null;
+    	int matchStart=-1;
         for (int i = offset; i < targetChildren.length; i++) {
-			if(refChildren[j].getRawSignature().startsWith("$")) {
-				if(!dynamicStatements.containsKey(refChildren[j].toString())) {
-					dynamicStatements.put(refChildren[j].toString(),target.getChildren()[j]);
+        	if(j==0) {
+        		matchStart=i;
+        	}
+        	if(refChildren[j].getRawSignature().startsWith("$$")) {
+				if(!dynamicLists.containsKey(refChildren[j].toString())) {
+					 statList = new ArrayList<IASTNode>();
+					dynamicLists.put(refChildren[j].toString(), statList);
+					statList.add(targetChildren[i]);
 					j++;
-					
-					if(j==refChildren.length){
-						return i;
-					}
 				}
-				else if(compareNode(dynamicStatements.get(refChildren[j]), targetChildren[i])){
-					j++;
-					
-					if(j==refChildren.length){
-						return i;
-					}
 				
+			
+			}else if(refChildren[j].getRawSignature().startsWith("$")) {
+				statList = null;
+					if(!dynamicLists.containsKey(refChildren[j].toString())) {
+						dynamicLists.put(refChildren[j].toString(),List.of(targetChildren[i]));
+						j++;
+					}
+					else if(compareNode(dynamicLists.get(refChildren[j]).get(0), targetChildren[i])){
+					j++;
+					matchStart=i;
 				}
 			}else if(compareNode(refChildren[j], targetChildren[i])){
+				statList = null;
+
 				j++;
-				if(j==refChildren.length){
-					return i;
-				}
 			}else{
-				j=0;
+				if(statList!=null) {
+					statList.add(targetChildren[i]);
+				}else {
+					j=0;
+				}
+			}
+        	
+			if(j==refChildren.length){
+				return new int[]{matchStart,i};
 			}
         }
-        return -1;
+        return new int[0];
     }
 
 	private boolean compareNode(IASTNode ref,  IASTNode target) {
