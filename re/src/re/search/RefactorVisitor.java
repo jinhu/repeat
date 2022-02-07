@@ -22,6 +22,7 @@ public class RefactorVisitor extends ASTVisitor {
 	public List<ICPPASTIfStatement> replacements = new ArrayList<>();
 	List<ICPPASTFunctionCallExpression> custom = new ArrayList<>();
 	private HashMap<String, String> dynamic = new HashMap<>();
+	private HashMap<String, IASTNode> dynamicStatements = new HashMap<>();
 
 	@Override
 	public int visit(IASTStatement statement) {
@@ -92,7 +93,24 @@ public class RefactorVisitor extends ASTVisitor {
     	}
     	int j=0;
         for (int i = offset; i < targetChildren.length; i++) {
-			if(compareNode(refChildren[j], targetChildren[i])){
+			if(refChildren[j].getRawSignature().startsWith("$")) {
+				if(!dynamicStatements.containsKey(refChildren[j].toString())) {
+					dynamicStatements.put(refChildren[j].toString(),target.getChildren()[j]);
+					j++;
+					
+					if(j==refChildren.length){
+						return i;
+					}
+				}
+				else if(compareNode(dynamicStatements.get(refChildren[j]), targetChildren[i])){
+					j++;
+					
+					if(j==refChildren.length){
+						return i;
+					}
+				
+				}
+			}else if(compareNode(refChildren[j], targetChildren[i])){
 				j++;
 				if(j==refChildren.length){
 					return i;

@@ -33,7 +33,7 @@ public class Juvenal extends ASTVisitor implements Appl {
 	@Override
     public void start(String[] args) throws CoreException {
 		var config="c:\\sw-dev\\re\\config\\sample.re.factor.c";
-    	System.out.println(config);
+    	System.out.println(args[0]);
         configure(config);
     }
 	

@@ -3,7 +3,7 @@
 void refactoring(){
 if(true){
 	xxx_TRACE_OUT( $result );
-	callTo( 1, 2, 3 );
+	$$statement;
 	ER_LC( $result ,  WHXT_SYSTEM_ERROR );
 }else{
  replaced_dynamic(multiple, lines);
@@ -13,6 +13,9 @@ if(true){
 if(true){
 	if (OK == result)
    {
+	xxx_TRACE_OUT( result );
+	callTo( 1, 2, 3 );
+	ER_LC( result ,  WHXT_SYSTEM_ERROR );
       result = WHAVSPMC_get_ch_constants(&ch_mc_ptr);
    }
 }else{
