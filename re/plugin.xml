@@ -3,8 +3,8 @@
 <plugin>
 	<extension point="org.eclipse.emf.ecore.generated_package">
 		<package
-			uri = "http://jinmin.hu/re/factor/Model"
-			class = "re.factor.model.ModelPackage"
-			genModel = "model/generated/Model.genmodel" />
+			uri = "http://www.Factor.re"
+			class = "re.factor.FactorPackage"
+			genModel = "model/generated/Factor.genmodel" />
 	</extension>
 </plugin>

@@ -1,0 +1,9 @@
+grammar re.Factor with org.eclipse.xtext.common.Terminals
+
+generate factor "http://www.Factor.re"
+
+Model:
+	greetings+=Greeting*;
+	
+Greeting:
+	'Hello' name=ID '!';

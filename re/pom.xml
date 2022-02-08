@@ -1,15 +1,13 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>re</groupId>
 		<artifactId>re.parent</artifactId>
-		<version>0.1.0</version>
+		<version>1.0.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>re</artifactId>
 	<packaging>eclipse-plugin</packaging>
-
 
 	<build>
 		<plugins>
@@ -29,7 +27,7 @@
 				<configuration>
 					<mainClass>org.eclipse.emf.mwe2.launch.runtime.Mwe2Launcher</mainClass>
 					<arguments>
-						<argument>/${project.basedir}/src/re/factor/GenerateModel.mwe2</argument>
+						<argument>/${project.basedir}/src/re/GenerateFactor.mwe2</argument>
 						<argument>-p</argument>
 						<argument>rootPath=/${project.basedir}/..</argument>
 					</arguments>
@@ -69,7 +67,7 @@
 				<groupId>org.eclipse.xtend</groupId>
 				<artifactId>xtend-maven-plugin</artifactId>
 			</plugin>
-
+	
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-clean-plugin</artifactId>
@@ -77,12 +75,6 @@
 					<filesets combine.children="append">
 						<fileset>
 							<directory>${basedir}/../re/src-gen/</directory>
-							<includes>
-								<include>**/*</include>
-							</includes>
-						</fileset>
-						<fileset>
-							<directory>${basedir}/../re.tests/src-gen/</directory>
 							<includes>
 								<include>**/*</include>
 							</includes>
@@ -100,12 +92,6 @@
 							</includes>
 						</fileset>
 						<fileset>
-							<directory>${basedir}/../re.ui.tests/src-gen/</directory>
-							<includes>
-								<include>**/*</include>
-							</includes>
-						</fileset>
-						<fileset>
 							<directory>${basedir}/../re.web/src-gen/</directory>
 							<includes>
 								<include>**/*</include>
@@ -115,15 +101,6 @@
 							<directory>${basedir}/model/generated/</directory>
 						</fileset>
 					</filesets>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<source>15</source>
-					<target>15</target>
-					<compilerArgs>--enable-preview</compilerArgs>
 				</configuration>
 			</plugin>
 		</plugins>
@@ -162,42 +139,5 @@
 			</plugins>
 		</pluginManagement>
 	</build>
-	<dependencies>
-		<dependency>
-			<groupId>org.eclipse.platform</groupId>
-			<artifactId>org.eclipse.core.resources</artifactId>
-			<version>3.11.1</version>
-		</dependency>
-		<dependency>
-			<groupId>de.mhoffrogge.attached</groupId>
-			<artifactId>org.eclipse.cdt.core</artifactId>
-			<version>5.11.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.ltk.core</groupId>
-			<artifactId>refactoring</artifactId>
-			<version>3.3.0-v20070606-0010</version>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.emf</groupId>
-			<artifactId>org.eclipse.emf.common</artifactId>
-			<version>2.23.0</version>
-		</dependency>
-		<dependency>
-			<groupId>com.google.inject</groupId>
-			<artifactId>guice</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.xtext</groupId>
-			<artifactId>org.eclipse.xtext</artifactId>
-			<version>2.25.0</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter</artifactId>
-			<version>RELEASE</version>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
+
 </project>
