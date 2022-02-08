@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Snippet {
@@ -35,12 +36,15 @@ public class Snippet {
                 var instert = offset < code.getChildren().length ? statements[offset] : null;
                 var statementsToRemove = Arrays.stream(Arrays.copyOfRange(code.getChildren(), range[0], offset));
                 statementsToRemove.forEach(statement -> rewrite.remove(statement, null));
-                var statementsToAdd = Arrays.stream(replacement.getElseClause().getChildren());
-                statementsToAdd.flatMap(statement -> expandDynamic(statement))
+                if(replacement.getElseClause()!=null) {
+                	var statementsToAdd = Arrays.stream(replacement.getElseClause().getChildren());
+                	statementsToAdd.flatMap(statement -> expandDynamic(statement))
                         .forEach(statement -> rewrite.insertBefore(code, instert, statement, null));
-            }
+                }
             dynamicExpression.clear();
             dynamicLists.clear();
+            rewrite.rewriteAST();
+            }
         } while (found);
     }
 
@@ -57,8 +61,8 @@ public class Snippet {
 
     private IASTNode replaceDynamic(IASTNode newStat) {
         var text = newStat.getRawSignature();
-        for (var entry : dynamicExpression.entrySet()) {
-            text = text.replace(entry.getKey(), entry.getValue());
+        for (var entry : dynamicLists.entrySet()) {
+            text = text.replace(entry.getKey(), entry.getValue().stream().map(IASTNode::getRawSignature).collect(Collectors.joining("")));
         }
         return rewrite.createLiteralNode(text);
     }
@@ -78,24 +82,26 @@ public class Snippet {
             if (j == 0) {
                 matchStart = i;
             }
-            if (refChildren[j].getRawSignature().startsWith("$$")) {
-                if (!dynamicLists.containsKey(refChildren[j].toString())) {
+        	var key = refChildren[j].getRawSignature();
+            if (key.startsWith("$$")) {
+                if (!dynamicLists.containsKey(key)) {
                     if(j+1<refChildren.length) {
                         statList = new ArrayList<IASTNode>();
-                    	dynamicLists.put(refChildren[j].toString(), statList);
+                    	dynamicLists.put(key, statList);
                     	statList.add(targetChildren[i]);
                     	j++;
                     }else {
-                    	dynamicLists.put(refChildren[j].toString(), List.of(targetChildren));
+                    	dynamicLists.put(key, List.of(targetChildren));
                     	return  new int[] {0,targetChildren.length-1};
                     }
                 }
-            } else if (refChildren[j].getRawSignature().startsWith("$")) {
+                
+            } else if (key.startsWith("$")) {
                 statList = null;
-                if (!dynamicLists.containsKey(refChildren[j].toString())) {
-                    dynamicLists.put(refChildren[j].toString(), List.of(targetChildren[i]));
+                if (!dynamicLists.containsKey(key)) {
+                    dynamicLists.put(key, List.of(targetChildren[i]));
                     j++;
-                } else if (containNode(dynamicLists.get(refChildren[j]).get(0), targetChildren[i],0).length>0) {
+                } else if (containNode(dynamicLists.get(key).get(0), targetChildren[i],0).length>0) {
                     j++;
                     matchStart = i;
                 }
@@ -153,10 +159,10 @@ public class Snippet {
 		var targetString = target.toString();
 
 		if (refString.startsWith("$")) {
-		    if (!dynamicExpression.containsKey(refString)) {
-		        dynamicExpression.put(refString, targetString);
+		    if (!dynamicLists.containsKey(refString)) {
+		    	dynamicLists.put(refString, List.of(target));
 		    }
-		    return dynamicExpression.get(refString).equals(targetString);
+		    return dynamicLists.get(refString).equals(targetString);
 		} else {
 		    return refString.equals(targetString);
 		}

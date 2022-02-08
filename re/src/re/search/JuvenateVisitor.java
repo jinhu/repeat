@@ -1,40 +1,62 @@
 package re.search;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.cdt.core.dom.ast.ASTVisitor;
+import org.eclipse.cdt.core.dom.ast.IASTCompoundStatement;
 import org.eclipse.cdt.core.dom.ast.IASTDeclaration;
+import org.eclipse.cdt.core.dom.ast.IASTNode;
+import org.eclipse.cdt.core.dom.ast.IASTStatement;
+import org.eclipse.cdt.core.dom.ast.cpp.ICPPASTFunctionCallExpression;
 import org.eclipse.cdt.core.dom.ast.cpp.ICPPASTFunctionDeclarator;
 import org.eclipse.cdt.core.dom.ast.cpp.ICPPASTFunctionDefinition;
+import org.eclipse.cdt.core.dom.ast.cpp.ICPPASTIfStatement;
+import org.eclipse.cdt.core.dom.rewrite.ASTRewrite;
 
 public class JuvenateVisitor extends ASTVisitor {
 
 	public JuvenateVisitor() {
 		super(true);
 	}
-	
-	CleanupVisitor cleanup = new CleanupVisitor();
-	RefactorVisitor refactor = new RefactorVisitor();
+	public List<ICPPASTIfStatement> replacements = new ArrayList<>();
+	List<ICPPASTFunctionCallExpression> custom = new ArrayList<>();
 
 	@Override
 	public int visit(IASTDeclaration declaration) {
 		
 		if (declaration instanceof ICPPASTFunctionDefinition fun) {
-			if(isRefactor(fun)) {
-				fun.accept(refactor);
-			}else if(isCleanup(fun)) {
-				fun.accept(cleanup);
+			if(fun.getDeclarator().getName().toString().contains("efactor")){
+				importRefactor(fun);
+			}else if(fun.getDeclarator().getName().toString().contains("clean_up")) {		
+				importCleanups(fun);
 			}
 		} 
 		return super.visit(declaration);
 	}
 
-	private boolean isCleanup(ICPPASTFunctionDefinition fun) {
+	private void importCleanups(ICPPASTFunctionDefinition fun) {
 		
-		return fun.getDeclarator().getName().toString().contains("clean_up");
 	}
 
-	private boolean isRefactor(ICPPASTFunctionDefinition fun) {
-		return fun.getDeclarator().getName().toString().contains("efactor");
+	private void importRefactor(ICPPASTFunctionDefinition fun) {
+		for(var node :fun.getBody().getChildren()) {
+			if (node instanceof ICPPASTIfStatement ifStatement) {
+				replacements.add(ifStatement);
+			}
+			else if (node instanceof ICPPASTFunctionCallExpression stat) {
+				custom.add(stat);
+			}
+		}
 	}
 	
-	
+
+	public void process(ASTRewrite rewrite, IASTCompoundStatement code) {
+		var snippet = new re.use.Snippet(code, rewrite);
+		for (var replacement : replacements) {
+			snippet.replace(replacement);
+		}
+	}
+
+
 }

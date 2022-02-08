@@ -1,28 +1,23 @@
 
 package re.factor;
 
-import org.eclipse.cdt.core.CProjectNature;
-import org.eclipse.cdt.core.dom.ast.ASTVisitor;
+import java.util.Arrays;
+
 import org.eclipse.cdt.core.dom.ast.IASTTranslationUnit;
 import org.eclipse.cdt.core.dom.rewrite.ASTRewrite;
-import org.eclipse.cdt.core.model.*;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.cdt.core.model.CModelException;
+import org.eclipse.cdt.core.model.CoreModel;
+import org.eclipse.cdt.core.model.ICModel;
+import org.eclipse.cdt.core.model.ICProject;
+import org.eclipse.cdt.core.model.ISourceRoot;
+import org.eclipse.cdt.core.model.ITranslationUnit;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.common.util.BasicMonitor.Printing;
 import org.eclipse.ltk.core.refactoring.Change;
-import org.osgi.framework.BundleContext;
 
 import re.search.Juvenal;
-
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.util.Arrays;
 
 /**
  * The activator class controls the plug-in life cycle

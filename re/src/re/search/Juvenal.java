@@ -34,7 +34,7 @@ public class Juvenal extends ASTVisitor implements Appl {
     @Override
     public int visit(IASTStatement statement) {
     	if (statement instanceof ICPPASTCompoundStatement block) {
-        	visitor.refactor.process(rewriter,block);
+        	visitor.process(rewriter,block);
 //		}else {
 //	    	process(statement);			
 		}
