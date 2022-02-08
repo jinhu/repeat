@@ -7,6 +7,8 @@ import org.eclipse.cdt.core.dom.ast.IASTTranslationUnit;
 import org.eclipse.cdt.core.dom.rewrite.ASTRewrite;
 import org.eclipse.cdt.core.model.CModelException;
 import org.eclipse.cdt.core.model.CoreModel;
+import org.eclipse.cdt.core.model.ICElement;
+import org.eclipse.cdt.core.model.ICElementVisitor;
 import org.eclipse.cdt.core.model.ICModel;
 import org.eclipse.cdt.core.model.ICProject;
 import org.eclipse.cdt.core.model.ISourceRoot;
@@ -22,7 +24,7 @@ import re.search.Juvenal;
 /**
  * The activator class controls the plug-in life cycle
  */
-public class WorkspaceVisitor  {
+public class WorkspaceVisitor  implements ICElementVisitor{
 
     private ICModel cModel;
 	private IProgressMonitor progressMonitor;
@@ -33,40 +35,23 @@ public class WorkspaceVisitor  {
 	public void visitWorkspace() throws Exception {
 		visitor = new Juvenal( "c:\\sw-dev\\re\\config\\refactor.c");
 		cModel = CoreModel.getDefault().getCModel();
-        progressMonitor = BasicMonitor.toIProgressMonitorWithBlocking(new Printing(System.out));
-        var projects = Arrays.stream(cModel.getCProjects());
-        projects.forEach(this::visitProject);
+		progressMonitor = BasicMonitor.toIProgressMonitorWithBlocking(new Printing(System.out));
+		cModel.accept(this);
 		
     }
 
-    private void visitProject(ICProject project) {
-        try {
-            var sources = Arrays.stream(project.getAllSourceRoots());
-            sources.forEach(this::visitSource);
-        } catch (CModelException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    private void visitSource(ISourceRoot source) {
-        try {
-            var atu = getAtuFromSource(source);
+	@Override
+	public boolean visit(ICElement element) throws CoreException {
+		if(element instanceof ITranslationUnit tu) {
+			var atu = tu.getAST();
             rewrite = ASTRewrite.create(atu);
     		visitor.setRewriter(rewrite);
             atu.accept(visitor);
             Change c = rewrite.rewriteAST();
             c.perform(progressMonitor);
-        } catch (CoreException e) {
-            e.printStackTrace();
-        }
-    }
-
-	private IASTTranslationUnit getAtuFromSource(ISourceRoot source) throws CModelException, CoreException {
-		var ice = source.getChildren()[0];
-		var tu = (ITranslationUnit)ice;
-		var atu = tu.getAST();
-		return atu;
+		}
+		return false;
 	}
+
 
 }
