@@ -32,12 +32,12 @@ public class Snippet {
             if (found) {
                 offset = range[1] + 1;
                 var statements = code.getChildren();
-                var instert = offset < code.getChildren().length ? statements[offset] :null;
+                var instert = offset < code.getChildren().length ? statements[offset] : null;
                 var statementsToRemove = Arrays.stream(Arrays.copyOfRange(code.getChildren(), range[0], offset));
-                statementsToRemove.forEach(statement->rewrite.remove(statement, null));
+                statementsToRemove.forEach(statement -> rewrite.remove(statement, null));
                 var statementsToAdd = Arrays.stream(replacement.getElseClause().getChildren());
-                statementsToAdd.flatMap(statement->expandDynamic(statement))
-                 .forEach(statement->rewrite.insertBefore(code, instert, statement, null));
+                statementsToAdd.flatMap(statement -> expandDynamic(statement))
+                        .forEach(statement -> rewrite.insertBefore(code, instert, statement, null));
             }
             dynamicExpression.clear();
             dynamicLists.clear();
@@ -45,14 +45,14 @@ public class Snippet {
     }
 
     private Stream<IASTNode> expandDynamic(IASTNode newStat) {
-            var text = newStat.getRawSignature();
-            if (text.startsWith("$")) {
-                return dynamicLists.get(text).stream();
-            } else if (text.contains("$")) {
-                return Stream.of(replaceDynamic(newStat));
-            } else {
-                return Stream.of(newStat);
-            }
+        var text = newStat.getRawSignature();
+        if (text.startsWith("$")) {
+            return dynamicLists.get(text).stream();
+        } else if (text.contains("$")) {
+            return Stream.of(replaceDynamic(newStat));
+        } else {
+            return Stream.of(newStat);
+        }
     }
 
     private IASTNode replaceDynamic(IASTNode newStat) {
@@ -80,25 +80,27 @@ public class Snippet {
             }
             if (refChildren[j].getRawSignature().startsWith("$$")) {
                 if (!dynamicLists.containsKey(refChildren[j].toString())) {
-                    statList = new ArrayList<IASTNode>();
-                    dynamicLists.put(refChildren[j].toString(), statList);
-                    statList.add(targetChildren[i]);
-                    j++;
+                    if(j+1<refChildren.length) {
+                        statList = new ArrayList<IASTNode>();
+                    	dynamicLists.put(refChildren[j].toString(), statList);
+                    	statList.add(targetChildren[i]);
+                    	j++;
+                    }else {
+                    	dynamicLists.put(refChildren[j].toString(), List.of(targetChildren));
+                    	return  new int[] {0,targetChildren.length-1};
+                    }
                 }
-
-
             } else if (refChildren[j].getRawSignature().startsWith("$")) {
                 statList = null;
                 if (!dynamicLists.containsKey(refChildren[j].toString())) {
                     dynamicLists.put(refChildren[j].toString(), List.of(targetChildren[i]));
                     j++;
-                } else if (compareNode(dynamicLists.get(refChildren[j]).get(0), targetChildren[i])) {
+                } else if (containNode(dynamicLists.get(refChildren[j]).get(0), targetChildren[i],0).length>0) {
                     j++;
                     matchStart = i;
                 }
-            } else if (compareNode(refChildren[j], targetChildren[i])) {
+            } else if (containNode(refChildren[j], targetChildren[i],0).length>0) {
                 statList = null;
-
                 j++;
             } else {
                 if (statList != null) {
@@ -112,7 +114,12 @@ public class Snippet {
                 return new int[]{matchStart, i};
             }
         }
-        return new int[0];
+        
+        if(compareEndNode(ref, target)){
+        	return new int[]{0, 0};
+        }else {
+        	return new int[0];
+        }
     }
 
     private boolean compareNode(IASTNode ref, IASTNode target) {
@@ -123,6 +130,10 @@ public class Snippet {
                 dynamicLists.put(ref.getRawSignature(), List.of(target));
                 return true;
             }
+        	if(refChildren[0].getRawSignature().startsWith("$$")) {
+        		dynamicLists.put(ref.getRawSignature(), List.of(target));
+        		return true;
+        	}
             return false;
         }
         for (int i = 0; i < targetChildren.length; i++) {
@@ -132,18 +143,22 @@ public class Snippet {
         }
 
         if (targetChildren.length == 0) {
-            var refString = ref.toString();
-            var targetString = target.toString();
-
-            if (refString.startsWith("$")) {
-                if (!dynamicExpression.containsKey(refString)) {
-                    dynamicExpression.put(refString, targetString);
-                }
-                return dynamicExpression.get(refString).equals(targetString);
-            } else {
-                return refString.equals(targetString);
-            }
+            return compareEndNode(ref, target);
         }
         return true;
     }
+
+	private boolean compareEndNode(IASTNode ref, IASTNode target) {
+		var refString = ref.toString();
+		var targetString = target.toString();
+
+		if (refString.startsWith("$")) {
+		    if (!dynamicExpression.containsKey(refString)) {
+		        dynamicExpression.put(refString, targetString);
+		    }
+		    return dynamicExpression.get(refString).equals(targetString);
+		} else {
+		    return refString.equals(targetString);
+		}
+	}
 }

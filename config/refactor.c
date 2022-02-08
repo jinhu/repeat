@@ -2,18 +2,35 @@
 
 void refactoring(){
 	int $result = 0;
-if(true){
-	xxx_TRACE_OUT( $result );
-	$$statement;
-	ER_LC( $result ,  WHXT_SYSTEM_ERROR );
-}else{
- replaced_dynamic(multiple, lines);
- var $result = ch_mc_ptr->sensor_valid;
-}
+	if(true){
+			if(true){
+				$$ifBlock;
+			}else{
+				$$elseBlock;
+			}
+	}else{
+		
+			if(false){
+				$$elseBlock
+			}else{
+				$$ifBlock;
+			}
+	}
+
 /*
 if(true){
 	if (OK == result)
    {
+	   	if(true){
+		replaced_dynamic(multiple, lines);
+		var result = ch_mc_ptr->sensor_valid;
+		result = WHAVSPMC_get_ch_constants(mc_ptr);
+	else{
+		result = WHAVSPMC_get_ch_constants(ch_ptr);
+		replaced_dynamic(multiple, lines);
+		var result = ch_mc_ptr->sensor_valid;
+	}
+
 		int result  = 0;
 	xxx_TRACE_OUT( result );
       result = WHAVSPMC_get_ch_constants(&ch_mc_ptr);
