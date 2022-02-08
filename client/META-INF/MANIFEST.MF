@@ -12,4 +12,6 @@ Bundle-ActivationPolicy: lazy
 Import-Package: org.osgi.framework;version="1.3.0",
  org.osgi.service.component.annotations;version="1.2.0";resolution:="optional"
 Automatic-Module-Name: client
-Require-Bundle: re
+Require-Bundle: re,
+ org.eclipse.equinox.registry,
+ org.eclipse.cdt.core
