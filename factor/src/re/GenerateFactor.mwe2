@@ -14,9 +14,11 @@ Workflow {
 				rootPath = rootPath
 				eclipsePlugin = {
 					enabled = true
+					name = "view"
 				}
 				web = {
 					enabled = true
+					name = "serve"
 				}
 				createEclipseMetaData = true
 			}

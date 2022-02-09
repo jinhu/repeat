@@ -344,7 +344,7 @@
 			point="org.eclipse.ui.ide.markerResolution">
 		<markerResolutionGenerator
 			class="re.ui.FactorExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator"
-			markerType="re.ui.factor.check.fast">
+			markerType="view.factor.check.fast">
 			<attribute
 				name="FIXABLE_KEY"
 				value="true">
@@ -352,7 +352,7 @@
 		</markerResolutionGenerator>
 		<markerResolutionGenerator
 			class="re.ui.FactorExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator"
-			markerType="re.ui.factor.check.normal">
+			markerType="view.factor.check.normal">
 			<attribute
 				name="FIXABLE_KEY"
 				value="true">
@@ -360,7 +360,7 @@
 		</markerResolutionGenerator>
 		<markerResolutionGenerator
 			class="re.ui.FactorExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator"
-			markerType="re.ui.factor.check.expensive">
+			markerType="view.factor.check.expensive">
 			<attribute
 				name="FIXABLE_KEY"
 				value="true">

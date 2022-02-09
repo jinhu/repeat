@@ -31,7 +31,7 @@ public class ServerLauncher {
 			new MetaInfConfiguration()
 		});
 		ctx.setAttribute(WebInfConfiguration.CONTAINER_JAR_PATTERN,
-			".*/re\\.web/.*,.*\\.jar");
+			".*/serve/.*,.*\\.jar");
 		ctx.setInitParameter("org.eclipse.jetty.servlet.Default.useFileMappedBuffer", "false");
 		server.setHandler(ctx);
 		Slf4jLog log = new Slf4jLog(ServerLauncher.class.getName());

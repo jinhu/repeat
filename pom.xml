@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>re</groupId>
 	<version>1.0.0-SNAPSHOT</version>
-	<artifactId>re.parent</artifactId>
+	<artifactId>re</artifactId>
 	<packaging>pom</packaging>
 
 	<properties>
@@ -21,11 +21,11 @@
 		<additionalTestArguments></additionalTestArguments>
 	</properties>
 	<modules>
-		<module>re</module>
+		<module>factor</module>
 		<module>re.ide</module>
-		<module>re.ui</module>
-		<module>re.web</module>
-		<module>re.target</module>
+		<module>view</module>
+		<module>serve</module>
+		<module>target</module>
 	</modules>
 	<dependencyManagement>
 		<dependencies>

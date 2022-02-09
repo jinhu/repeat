@@ -3,10 +3,10 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>re</groupId>
-		<artifactId>re.parent</artifactId>
+		<artifactId>re</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
-	<artifactId>re</artifactId>
+	<artifactId>re.factor</artifactId>
 	<packaging>eclipse-plugin</packaging>
 
 	<build>
@@ -61,6 +61,12 @@
 						<artifactId>xtext-antlr-generator</artifactId>
 						<version>2.1.1</version>
 					</dependency>
+					<dependency>
+						<groupId>p2.eclipse-plugin</groupId>
+						<artifactId>org.eclipse.cdt.core</artifactId>
+						<version>7.2.0.202102251239</version>
+						<scope>compile</scope>
+					</dependency>
 				</dependencies>
 			</plugin>
 			<plugin>
@@ -86,13 +92,13 @@
 							</includes>
 						</fileset>
 						<fileset>
-							<directory>${basedir}/../re.ui/src-gen/</directory>
+							<directory>${basedir}/../view/src-gen/</directory>
 							<includes>
 								<include>**/*</include>
 							</includes>
 						</fileset>
 						<fileset>
-							<directory>${basedir}/../re.web/src-gen/</directory>
+							<directory>${basedir}/../serve/src-gen/</directory>
 							<includes>
 								<include>**/*</include>
 							</includes>

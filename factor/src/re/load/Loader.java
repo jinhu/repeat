@@ -23,19 +23,13 @@ import java.util.stream.Stream;
 
 public class Loader implements Appl {
 
-    private String makefile;
-    private String target;
-    IIndex index = null;
-    int options = 0;
-    IParserLogService log = new DefaultLogService();
-    private ScannerInfo scanInfo;
-
-    public Loader() {
-    }
-
     @Override
-    public void start(String[] args) throws CoreException, IOException {
-        var loader = new MakefileLoader(args);
+    public void start(String[] args) {
+        try {
+            var loader = new MakefileLoader(args);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 
