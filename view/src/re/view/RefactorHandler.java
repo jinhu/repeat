@@ -50,7 +50,7 @@ public class RefactorHandler extends AbstractHandler {
 	    }
 		atu.accept(refactorings);
 		var space = new CppSourceVisitor();
-		space.setJuvenal(refactorings);
+		space.setRefactorings(refactorings);
 		var cModel = CoreModel.getDefault().getCModel();
 		try {
 			cModel.accept(space);

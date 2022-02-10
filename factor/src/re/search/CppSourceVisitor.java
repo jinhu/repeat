@@ -58,7 +58,7 @@ public class CppSourceVisitor  implements ICElementVisitor{
 		return false;
 	}
 
-	public void setJuvenal(Refactorings refactor) {
+	public void setRefactorings(Refactorings refactor) {
 		this.refactor = refactor; 
 	}
 
