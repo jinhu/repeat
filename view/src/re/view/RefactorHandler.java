@@ -13,6 +13,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 
+import re.search.Refactorings;
 import re.search.CppSourceVisitor;
 
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -28,29 +29,40 @@ public class RefactorHandler extends AbstractHandler {
 		var wb = PlatformUI.getWorkbench();
 		var activeWorkbenchWindow = wb.getActiveWorkbenchWindow();
 		var selectionService = activeWorkbenchWindow.getSelectionService();
-		   var selection = selectionService.getSelection();
-		   var doc = ((TextSelection)selection).getText();
-		   var atu = re.use.Helper.getAtu("tmp.c", doc);
-		   var juvenator =new re.search.CodeBlockVisitor();
-		   atu.accept(juvenator);
-	        var space = new CppSourceVisitor();
-	        space.setJuvenal(juvenator);
-	        var cModel = CoreModel.getDefault().getCModel();
-	        try {
-				cModel.accept(space);
-			} catch (CoreException e) {
-				e.printStackTrace();
-			}
-	        
-//		   var structSelection = (IStructuredSelection) selection;
-//		   var cu = (ICompilationUnit)structSelection.getFirstElement();
+		var selection = selectionService.getSelection();
+		var refactorings = new Refactorings();
+
+	    IASTTranslationUnit atu = null;
+		if (selection instanceof IStructuredSelection structured) {
+		    var cu = structured.getFirstElement() ;
+//		    var ir = ((IFile)(cu).getResource());
+//		    if (cu instanceof ICompulationUnit) {
+//				ICOMPulationUnit new_name = (ICOMPulationUnit)cu;
+//				
+//			}
+
+			
+		}
+	    else {
+			var doc = ((TextSelection) selection).getText();
+			atu = re.use.Helper.getAtu("tmp.c", doc);
+	    	
+	    }
+		atu.accept(refactorings);
+		var space = new CppSourceVisitor();
+		space.setJuvenal(refactorings);
+		var cModel = CoreModel.getDefault().getCModel();
+		try {
+			cModel.accept(space);
+		} catch (CoreException e) {
+			e.printStackTrace();
+		}
+
 //		   IFile ir = ((IFile)(
 //				   ).getResource());
 //		   var test = structSelection.toString();
 //		   MessageDialog.openInformation( window.getShell(),"File Size",test);
 
-		   		
-
-		   return null;
+		return null;
 	}
 }

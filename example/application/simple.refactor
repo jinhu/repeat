@@ -1,0 +1,9 @@
+#include "re.factor-0.1.h"
+
+refactor{
+	replace{
+		int x;
+	}with{
+		int y;
+	}
+}

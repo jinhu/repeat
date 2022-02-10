@@ -1,8 +1,8 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: view
-Bundle-SymbolicName: view;singleton:=true
-Bundle-Version: 0.0.1.qualifier
+Bundle-Name: re.view
+Bundle-SymbolicName: re.view;singleton:=true
+Bundle-Version: 0.1.0
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
 Export-Package: re.ui.contentassist,
@@ -16,7 +16,7 @@ Require-Bundle: org.eclipse.compare,
  org.eclipse.xtext.ui.codetemplates.ui,
  org.eclipse.xtext.ui.shared,
  re.ide,
- re,
+ re.factor,
  org.eclipse.cdt.core
 Import-Package: org.apache.log4j,
  org.eclipse.cdt.core.dom.ast

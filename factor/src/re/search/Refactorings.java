@@ -11,12 +11,11 @@ import org.eclipse.cdt.core.dom.ast.cpp.ICPPASTFunctionDefinition;
 import org.eclipse.cdt.core.dom.ast.cpp.ICPPASTIfStatement;
 import org.eclipse.cdt.core.dom.rewrite.ASTRewrite;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.ltk.core.refactoring.Change;
 
-import re.use.Snippet;
+public class Refactorings extends ASTVisitor {
 
-public class CodeBlockVisitor extends ASTVisitor {
-
-	public CodeBlockVisitor() {
+	public Refactorings() {
 		super(true);
 	}
 	public List<ICPPASTIfStatement> replacements = new ArrayList<>();
@@ -51,11 +50,13 @@ public class CodeBlockVisitor extends ASTVisitor {
 	}
 	
 
-	public void process(ASTRewrite rewrite, IASTCompoundStatement code, IProgressMonitor progress) {
-		var snippet = new Snippet(code, rewrite,progress);
+	public List<Change> process(ASTRewrite rewrite, IASTCompoundStatement code) {
+		var snippet = new Snippet(code, rewrite);
+		List<Change> changes = List.of();
 		for (var replacement : replacements) {
-			snippet.replace(replacement);
+			changes.addAll(snippet.replace(replacement));
 		}
+		return changes;
 	}
 
 

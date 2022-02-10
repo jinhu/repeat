@@ -1,4 +1,4 @@
-package re.use;
+package re.search;
 
 import org.eclipse.cdt.core.dom.ast.IASTCompoundStatement;
 import org.eclipse.cdt.core.dom.ast.IASTNode;
@@ -6,6 +6,7 @@ import org.eclipse.cdt.core.dom.ast.cpp.ICPPASTIfStatement;
 import org.eclipse.cdt.core.dom.rewrite.ASTRewrite;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.ltk.core.refactoring.Change;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,18 +20,17 @@ public class Snippet {
     private IASTCompoundStatement code;
     private HashMap<String, String> dynamicExpression = new HashMap<>();
     private HashMap<String, List<IASTNode>> dynamicLists = new HashMap<>();
-	private IProgressMonitor progress;
 
 
-    public Snippet(IASTCompoundStatement aCode, ASTRewrite aRewrite, IProgressMonitor aProgress) {
+    public Snippet(IASTCompoundStatement aCode, ASTRewrite aRewrite) {
         code = aCode;
         rewrite = aRewrite;
-        progress = aProgress;
     }
 
-    public void replace(ICPPASTIfStatement replacement) {
+    public List<Change> replace(ICPPASTIfStatement replacement) {
         boolean found;
         int offset = 0;
+        List<Change> changes = List.of();
         do {
             var range = containNode(replacement.getThenClause(), code, offset);
             found = range.length > 0;
@@ -47,15 +47,11 @@ public class Snippet {
                 }
             dynamicExpression.clear();
             dynamicLists.clear();
-            var changeset = rewrite.rewriteAST();
-            try {
-				changeset.perform(progress);
-			} catch (CoreException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+            	changes.add( rewrite.rewriteAST());
             }
         } while (found);
+        
+        return changes;
     }
 
     private Stream<IASTNode> expandDynamic(IASTNode newStat) {

@@ -20,7 +20,7 @@ import org.eclipse.ltk.core.refactoring.Change;
 public class CppSourceVisitor  implements ICElementVisitor{
 	private IProgressMonitor progressMonitor;
 	private ASTRewrite rewrite;
-	private CodeBlockVisitor refactor;
+	private Refactorings refactor;
 
 	public void visitWorkspace() throws Exception {
 		progressMonitor = BasicMonitor.toIProgressMonitorWithBlocking(new Printing(System.out));
@@ -37,9 +37,19 @@ public class CppSourceVisitor  implements ICElementVisitor{
                 @Override
                 public int visit(IASTStatement statement) {
                 	if (statement instanceof ICPPASTCompoundStatement block) {
-                    	refactor.process(rewrite,block, progressMonitor);
+                    	var changes = refactor.process(rewrite,block);
+                        try {
+                        	for(var change : changes) {
+                        		change.perform(progressMonitor);
+                        	}
+            			} catch (CoreException e) {
+            				// TODO Auto-generated catch block
+            				e.printStackTrace();
+            			}
+
             		}
                 	return super.visit(statement);
+                	
                 }
 });
             
@@ -48,7 +58,7 @@ public class CppSourceVisitor  implements ICElementVisitor{
 		return false;
 	}
 
-	public void setJuvenal(CodeBlockVisitor refactor) {
+	public void setJuvenal(Refactorings refactor) {
 		this.refactor = refactor; 
 	}
 
