@@ -6,7 +6,7 @@
 		<version>0.1.0</version>
 		<artifactId>re</artifactId>
 	</parent>
-	<artifactId>re.ide</artifactId>
+	<artifactId>re.act</artifactId>
 	<packaging>eclipse-plugin</packaging>
 
 	<dependencies>

@@ -1,5 +1,7 @@
 package re.view;
 
+import java.util.Iterator;
+
 import org.eclipse.cdt.core.dom.ast.IASTTranslationUnit;
 import org.eclipse.cdt.core.model.CoreModel;
 import org.eclipse.core.runtime.CoreException;
@@ -23,11 +25,16 @@ public class Activator extends ViewActivator {
 		var refactorings = new Refactorings();
 		var atu = re.use.Helper.getAtu("c:\\sw-dev\\re\\example\\refactorings\\example.refactor.c");
 		atu.accept(refactorings);
-		var space = new CppSourceVisitor();
-		space.setRefactorings(refactorings);
+		var visitor = new CppSourceVisitor();
+		visitor.setRefactorings(refactorings);
 		var cModel = CoreModel.getDefault().getCModel();
 		try {
-			cModel.accept(space);
+			for (var proj : cModel.getCProjects()) {
+				proj.accept(visitor);
+			}
+			cModel.accept(visitor);
+			var projects = cModel.getCProjects();
+			var srcs = projects[0].getAllSourceRoots();
 		} catch (CoreException e) {
 			e.printStackTrace();
 		}

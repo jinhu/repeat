@@ -80,7 +80,7 @@
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>re.ide</artifactId>
+			<artifactId>re.act</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>

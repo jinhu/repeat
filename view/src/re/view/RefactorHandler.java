@@ -49,11 +49,14 @@ public class RefactorHandler extends AbstractHandler {
 	    	
 	    }
 		atu.accept(refactorings);
-		var space = new CppSourceVisitor();
-		space.setRefactorings(refactorings);
+		var visitor = new CppSourceVisitor();
+		visitor.setRefactorings(refactorings);
 		var cModel = CoreModel.getDefault().getCModel();
 		try {
-			cModel.accept(space);
+//			cModel.accept(visitor);
+			for (var project : cModel.getCProjects()) {
+				project.accept(visitor);
+			}
 		} catch (CoreException e) {
 			e.printStackTrace();
 		}

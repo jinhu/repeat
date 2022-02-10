@@ -21,7 +21,7 @@ public class CppSourceVisitor  implements ICElementVisitor{
 	private IProgressMonitor progressMonitor;
 	private ASTRewrite rewrite;
 	private Refactorings refactor;
-
+	
 	public void visitWorkspace() throws Exception {
 		progressMonitor = BasicMonitor.toIProgressMonitorWithBlocking(new Printing(System.out));
 		
