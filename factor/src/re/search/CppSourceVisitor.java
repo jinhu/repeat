@@ -1,6 +1,9 @@
 
 package re.search;
 
+import org.eclipse.cdt.core.dom.ast.ASTVisitor;
+import org.eclipse.cdt.core.dom.ast.IASTStatement;
+import org.eclipse.cdt.core.dom.ast.cpp.ICPPASTCompoundStatement;
 import org.eclipse.cdt.core.dom.rewrite.ASTRewrite;
 import org.eclipse.cdt.core.model.ICElement;
 import org.eclipse.cdt.core.model.ICElementVisitor;
@@ -14,13 +17,12 @@ import org.eclipse.ltk.core.refactoring.Change;
 /**
  * The activator class controls the plug-in life cycle
  */
-public class WorkspaceVisitor  implements ICElementVisitor{
+public class CppSourceVisitor  implements ICElementVisitor{
 	private IProgressMonitor progressMonitor;
-	private Juvenal visitor;
 	private ASTRewrite rewrite;
+	private CodeBlockVisitor refactor;
 
 	public void visitWorkspace() throws Exception {
-		visitor = new Juvenal( "c:\\sw-dev\\re\\config\\refactor.c");
 		progressMonitor = BasicMonitor.toIProgressMonitorWithBlocking(new Printing(System.out));
 		
     }
@@ -30,12 +32,24 @@ public class WorkspaceVisitor  implements ICElementVisitor{
 		if(element instanceof ITranslationUnit tu) {
 			var atu = tu.getAST();
             rewrite = ASTRewrite.create(atu);
-    		visitor.setRewriter(rewrite);
-            atu.accept(visitor);
-            Change c = rewrite.rewriteAST();
-            c.perform(progressMonitor);
+            
+            atu.accept(new ASTVisitor() {
+                @Override
+                public int visit(IASTStatement statement) {
+                	if (statement instanceof ICPPASTCompoundStatement block) {
+                    	refactor.process(rewrite,block, progressMonitor);
+            		}
+                	return super.visit(statement);
+                }
+});
+            
+            
 		}
 		return false;
+	}
+
+	public void setJuvenal(CodeBlockVisitor refactor) {
+		this.refactor = refactor; 
 	}
 
 

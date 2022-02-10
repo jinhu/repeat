@@ -1,4 +1,4 @@
-package re.view;
+package re.command;
 
 import org.eclipse.cdt.core.dom.ast.IASTFunctionCallExpression;
 import org.eclipse.cdt.core.dom.ast.IASTIfStatement;

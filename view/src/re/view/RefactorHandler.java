@@ -1,15 +1,20 @@
 package re.view;
 
 import org.eclipse.cdt.core.dom.ast.IASTTranslationUnit;
+import org.eclipse.cdt.core.model.CoreModel;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.ui.ISelectionService;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
+
+import re.search.CppSourceVisitor;
+
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ISelection;
@@ -26,8 +31,17 @@ public class RefactorHandler extends AbstractHandler {
 		   var selection = selectionService.getSelection();
 		   var doc = ((TextSelection)selection).getText();
 		   var atu = re.use.Helper.getAtu("tmp.c", doc);
-		   var juvenator =new re.search.JuvenateVisitor();
+		   var juvenator =new re.search.CodeBlockVisitor();
 		   atu.accept(juvenator);
+	        var space = new CppSourceVisitor();
+	        space.setJuvenal(juvenator);
+	        var cModel = CoreModel.getDefault().getCModel();
+	        try {
+				cModel.accept(space);
+			} catch (CoreException e) {
+				e.printStackTrace();
+			}
+	        
 //		   var structSelection = (IStructuredSelection) selection;
 //		   var cu = (ICompilationUnit)structSelection.getFirstElement();
 //		   IFile ir = ((IFile)(

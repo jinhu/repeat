@@ -10,10 +10,13 @@ import org.eclipse.cdt.core.dom.ast.cpp.ICPPASTFunctionCallExpression;
 import org.eclipse.cdt.core.dom.ast.cpp.ICPPASTFunctionDefinition;
 import org.eclipse.cdt.core.dom.ast.cpp.ICPPASTIfStatement;
 import org.eclipse.cdt.core.dom.rewrite.ASTRewrite;
+import org.eclipse.core.runtime.IProgressMonitor;
 
-public class JuvenateVisitor extends ASTVisitor {
+import re.use.Snippet;
 
-	public JuvenateVisitor() {
+public class CodeBlockVisitor extends ASTVisitor {
+
+	public CodeBlockVisitor() {
 		super(true);
 	}
 	public List<ICPPASTIfStatement> replacements = new ArrayList<>();
@@ -48,8 +51,8 @@ public class JuvenateVisitor extends ASTVisitor {
 	}
 	
 
-	public void process(ASTRewrite rewrite, IASTCompoundStatement code) {
-		var snippet = new re.use.Snippet(code, rewrite);
+	public void process(ASTRewrite rewrite, IASTCompoundStatement code, IProgressMonitor progress) {
+		var snippet = new Snippet(code, rewrite,progress);
 		for (var replacement : replacements) {
 			snippet.replace(replacement);
 		}

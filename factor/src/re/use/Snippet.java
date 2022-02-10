@@ -4,6 +4,8 @@ import org.eclipse.cdt.core.dom.ast.IASTCompoundStatement;
 import org.eclipse.cdt.core.dom.ast.IASTNode;
 import org.eclipse.cdt.core.dom.ast.cpp.ICPPASTIfStatement;
 import org.eclipse.cdt.core.dom.rewrite.ASTRewrite;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,11 +19,13 @@ public class Snippet {
     private IASTCompoundStatement code;
     private HashMap<String, String> dynamicExpression = new HashMap<>();
     private HashMap<String, List<IASTNode>> dynamicLists = new HashMap<>();
+	private IProgressMonitor progress;
 
 
-    public Snippet(IASTCompoundStatement aCode, ASTRewrite aRewrite) {
+    public Snippet(IASTCompoundStatement aCode, ASTRewrite aRewrite, IProgressMonitor aProgress) {
         code = aCode;
         rewrite = aRewrite;
+        progress = aProgress;
     }
 
     public void replace(ICPPASTIfStatement replacement) {
@@ -43,7 +47,13 @@ public class Snippet {
                 }
             dynamicExpression.clear();
             dynamicLists.clear();
-            rewrite.rewriteAST();
+            var changeset = rewrite.rewriteAST();
+            try {
+				changeset.perform(progress);
+			} catch (CoreException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
             }
         } while (found);
     }
@@ -128,31 +138,6 @@ public class Snippet {
         }
     }
 
-    private boolean compareNode(IASTNode ref, IASTNode target) {
-        var refChildren = ref.getChildren();
-        var targetChildren = target.getChildren();
-        if (refChildren.length != targetChildren.length) {
-            if (ref.getRawSignature().startsWith("$")) {
-                dynamicLists.put(ref.getRawSignature(), List.of(target));
-                return true;
-            }
-        	if(refChildren[0].getRawSignature().startsWith("$$")) {
-        		dynamicLists.put(ref.getRawSignature(), List.of(target));
-        		return true;
-        	}
-            return false;
-        }
-        for (int i = 0; i < targetChildren.length; i++) {
-            if (!compareNode(refChildren[i], targetChildren[i])) {
-                return false;
-            }
-        }
-
-        if (targetChildren.length == 0) {
-            return compareEndNode(ref, target);
-        }
-        return true;
-    }
 
 	private boolean compareEndNode(IASTNode ref, IASTNode target) {
 		var refString = ref.toString();

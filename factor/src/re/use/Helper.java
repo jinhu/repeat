@@ -1,5 +1,6 @@
 package re.use;
 
+import org.eclipse.cdt.core.dom.ast.IASTNode;
 import org.eclipse.cdt.core.dom.ast.IASTTranslationUnit;
 import org.eclipse.cdt.core.dom.ast.gnu.cpp.GPPLanguage;
 import org.eclipse.cdt.core.index.IIndex;
@@ -12,6 +13,7 @@ import org.eclipse.cdt.internal.core.parser.scanner.InternalFileContentProvider;
 import org.eclipse.core.runtime.CoreException;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 public class Helper implements Appl{
@@ -94,4 +96,21 @@ public class Helper implements Appl{
         return getAtu(fullPath,scanInfo,IncludeFileContentProvider.getSavedFilesProvider(), new DefaultLogService(), null,0);
     }
 
+    private boolean compareNode(IASTNode ref, IASTNode target) {
+        var refChildren = ref.getChildren();
+        var targetChildren = target.getChildren();
+        if (refChildren.length != targetChildren.length) {
+            return false;
+        }
+        for (int i = 0; i < targetChildren.length; i++) {
+            if (!compareNode(refChildren[i], targetChildren[i])) {
+                return false;
+            }
+        }
+
+        if (targetChildren.length == 0) {
+            return ref.toString().equals(target.toString());
+        }
+        return true;
+    }
 }
