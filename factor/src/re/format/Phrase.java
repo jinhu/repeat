@@ -1,7 +1,5 @@
 package re.format;
 
-import org.eclipse.cdt.core.model.ICModel;
-
 import re.model.AbstractAstModel;
 
 public class Phrase {

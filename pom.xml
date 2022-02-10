@@ -1,12 +1,15 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>re</groupId>
-	<version>1.0.0-SNAPSHOT</version>
+	<groupId>hu.jinmin</groupId>
+	<version>0.1.0</version>
 	<artifactId>re</artifactId>
 	<packaging>pom</packaging>
 
 	<properties>
+		<re.base>re</re.base>
+		<re.vision>0.1.0</re.vision>
+		<re.group>hu.jinmin</re.group>
 		<xtextVersion>2.25.0</xtextVersion>
 		<mwe2Version>2.12.1</mwe2Version>
 		<project.build.sourceEncoding>windows-1252</project.build.sourceEncoding>

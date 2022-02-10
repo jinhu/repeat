@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: view
 Bundle-SymbolicName: view;singleton:=true
 Bundle-Version: 0.0.1.qualifier
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
 Export-Package: re.ui.contentassist,
  re.ui.quickfix,
@@ -17,6 +17,7 @@ Require-Bundle: org.eclipse.compare,
  org.eclipse.xtext.ui.shared,
  re.ide,
  re
-Import-Package: org.apache.log4j
-Bundle-Activator: view.internal.ViewActivator
+Import-Package: org.apache.log4j,
+ org.eclipse.cdt.core.dom.ast
+Bundle-Activator: re.view.Activator
 Automatic-Module-Name: view
