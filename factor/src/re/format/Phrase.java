@@ -7,7 +7,8 @@ public class Phrase {
 	public GraphFormat graph;
 	
 	public Phrase(AbstractAstModel model) {
-		graph = new GraphFormat(model);
-		graph.toText("c:\\sw-dev\\demo\\yed.graphml");
+		graph = new GraphFormat();
+//		graph.toText("c:\\sw-dev\\demo\\yed.graphml");
 	}
 }
+  

@@ -20,6 +20,13 @@
 				</excludes>
 			</resource>
 		</resources>
+<testResources>
+<testResource>
+<directory>
+test/resources
+</directory>
+</testResource>
+</testResources>
 		<plugins>
 			<plugin>
 				<groupId>org.eclipse.xtend</groupId>
@@ -137,10 +144,10 @@
 		    <version>1.30</version>
  			<scope>provided</scope>
 		</dependency>
-		<dependency>
-			<groupId>jakarta.ws.rs</groupId>
-			<artifactId>jakarta.ws.rs-api</artifactId>
-			<version>3.0.0</version>
+<dependency>
+    <groupId>javax.ws.rs</groupId>
+    <artifactId>javax.ws.rs-api</artifactId>
+    <version>2.1.1</version>
 			<scope>provided</scope>
 		</dependency>
 

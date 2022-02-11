@@ -30,7 +30,7 @@ public class Snippet {
     public List<Change> replace(ICPPASTIfStatement replacement) {
         boolean found;
         int offset = 0;
-        List<Change> changes = List.of();
+        ArrayList<Change> changes = new ArrayList();
         do {
             var range = containNode(replacement.getThenClause(), code, offset);
             found = range.length > 0;
@@ -47,7 +47,6 @@ public class Snippet {
                 }
             dynamicExpression.clear();
             dynamicLists.clear();
-            	changes.add( rewrite.rewriteAST());
             }
         } while (found);
         

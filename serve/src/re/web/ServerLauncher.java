@@ -6,12 +6,16 @@ package re.web;
 import java.net.InetSocketAddress;
 import org.eclipse.jetty.annotations.AnnotationConfiguration;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.log.Slf4jLog;
 import org.eclipse.jetty.webapp.Configuration;
 import org.eclipse.jetty.webapp.MetaInfConfiguration;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.eclipse.jetty.webapp.WebInfConfiguration;
 import org.eclipse.jetty.webapp.WebXmlConfiguration;
+
+import re.serve.UmlServlet;
 
 /**
  * This program starts an HTTP server for testing the web integration of your DSL.
@@ -33,7 +37,10 @@ public class ServerLauncher {
 		ctx.setAttribute(WebInfConfiguration.CONTAINER_JAR_PATTERN,
 			".*/serve/.*,.*\\.jar");
 		ctx.setInitParameter("org.eclipse.jetty.servlet.Default.useFileMappedBuffer", "false");
+		var diagram = new ServletHolder( "/diagrams/*",new UmlServlet());
+		ctx.addServlet(diagram, "/diagrams/*");
 		server.setHandler(ctx);
+        
 		Slf4jLog log = new Slf4jLog(ServerLauncher.class.getName());
 		try {
 			server.start();

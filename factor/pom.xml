@@ -1,6 +1,27 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+	<dependencies>
+		<dependency>
+			<groupId>de.mhoffrogge.attached</groupId>
+			<artifactId>org.eclipse.cdt.core</artifactId>
+			<version>5.11.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.platform</groupId>
+			<artifactId>org.eclipse.equinox.common</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.emf</groupId>
+			<artifactId>org.eclipse.emf.common</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.ltk.core</groupId>
+			<artifactId>refactoring</artifactId>
+			<version>3.3.0-v20070606-0010</version>
+		</dependency>
+
+	</dependencies>
 	<parent>
 		<groupId>hu.jinmin</groupId>
 		<artifactId>re</artifactId>
@@ -62,7 +83,7 @@
 						<version>2.1.1</version>
 					</dependency>
 					<dependency>
-						<groupId>p2.eclipse-plugin</groupId>
+						<groupId>org.eclipse.cdt</groupId>
 						<artifactId>org.eclipse.cdt.core</artifactId>
 						<version>7.2.0.202102251239</version>
 						<scope>compile</scope>
@@ -107,6 +128,15 @@
 							<directory>${basedir}/model/generated/</directory>
 						</fileset>
 					</filesets>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>15</source>
+					<target>15</target>
+					<compilerArgs>--enable-preview</compilerArgs>
 				</configuration>
 			</plugin>
 		</plugins>

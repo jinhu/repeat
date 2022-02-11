@@ -50,13 +50,13 @@ public class Refactorings extends ASTVisitor {
 	}
 	
 
-	public List<Change> process(ASTRewrite rewrite, IASTCompoundStatement code) {
+	public void process(ASTRewrite rewrite, IASTCompoundStatement code) {
 		var snippet = new Snippet(code, rewrite);
-		List<Change> changes = List.of();
+		ArrayList<Change> changes = new ArrayList<>();
 		for (var replacement : replacements) {
-			changes.addAll(snippet.replace(replacement));
+			snippet.replace(replacement);
 		}
-		return changes;
+
 	}
 
 

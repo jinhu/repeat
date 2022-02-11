@@ -52,19 +52,8 @@ public class RefactorHandler extends AbstractHandler {
 		var visitor = new CppSourceVisitor();
 		visitor.setRefactorings(refactorings);
 		var cModel = CoreModel.getDefault().getCModel();
-		try {
-//			cModel.accept(visitor);
-			for (var project : cModel.getCProjects()) {
-				project.accept(visitor);
-			}
-		} catch (CoreException e) {
-			e.printStackTrace();
-		}
-
-//		   IFile ir = ((IFile)(
-//				   ).getResource());
-//		   var test = structSelection.toString();
-//		   MessageDialog.openInformation( window.getShell(),"File Size",test);
+		visitor.walk(cModel);
+		//cModel.accept(visitor);//should also work
 
 		return null;
 	}

@@ -71,8 +71,8 @@ public class Naissancer implements Appl {
                     }
                 }
             }
-            var b = filter.getComments();
-            var c =   filter.getDeclarations();
+//            var b = filter.getComments();
+//            var c =   filter.getDeclarations();
 
 
         } catch (Exception e) {
