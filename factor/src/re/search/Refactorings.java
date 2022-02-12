@@ -10,7 +10,6 @@ import org.eclipse.cdt.core.dom.ast.cpp.ICPPASTFunctionCallExpression;
 import org.eclipse.cdt.core.dom.ast.cpp.ICPPASTFunctionDefinition;
 import org.eclipse.cdt.core.dom.ast.cpp.ICPPASTIfStatement;
 import org.eclipse.cdt.core.dom.rewrite.ASTRewrite;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.ltk.core.refactoring.Change;
 
 public class Refactorings extends ASTVisitor {
@@ -51,7 +50,7 @@ public class Refactorings extends ASTVisitor {
 	
 
 	public void process(ASTRewrite rewrite, IASTCompoundStatement code) {
-		var snippet = new Snippet(code, rewrite);
+		var snippet = new SnippetMatcher(code, rewrite);
 		ArrayList<Change> changes = new ArrayList<>();
 		for (var replacement : replacements) {
 			snippet.replace(replacement);

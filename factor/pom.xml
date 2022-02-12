@@ -20,6 +20,11 @@
 			<artifactId>refactoring</artifactId>
 			<version>3.3.0-v20070606-0010</version>
 		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
+			<scope>test</scope>
+		</dependency>
 
 	</dependencies>
 	<parent>
