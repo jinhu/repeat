@@ -34,7 +34,8 @@ public class CppSourceVisitor  implements ICElementVisitor{
 	public boolean visit(ICElement element) throws CoreException {
 		if(element instanceof ITranslationUnit tu) {
 			var atu = tu.getAST();
-            rewrite = ASTRewrite.create(atu);
+            if(atu!=null) {
+			rewrite = ASTRewrite.create(atu);
             
             atu.accept(new ASTVisitor(true) {
                 @Override
@@ -50,12 +51,12 @@ public class CppSourceVisitor  implements ICElementVisitor{
             			}
 
             		}
+                
                 	return super.visit(statement);
                 	
-                }
-});
+                } });
             
-            
+            }   
 		}
 		return false;
 	}
