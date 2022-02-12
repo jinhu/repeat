@@ -20,6 +20,7 @@ public class Snippet {
     private IASTCompoundStatement code;
     private HashMap<String, String> dynamicExpression = new HashMap<>();
     private HashMap<String, List<IASTNode>> dynamicLists = new HashMap<>();
+    private int[] notFound=new int[0];
 
 
     public Snippet(IASTCompoundStatement aCode, ASTRewrite aRewrite) {
@@ -73,59 +74,62 @@ public class Snippet {
     }
 
 
-    private int[] containNode(IASTNode ref, IASTNode target, int offset) {
-        var refChildren = ref.getChildren();
-        var targetChildren = target.getChildren();
-        if (offset + refChildren.length > targetChildren.length) {
-            return new int[0];
+    private int[] containNode(IASTNode pattern, IASTNode match, int offset) {
+        var patterns = pattern.getChildren();
+        var matches = match.getChildren();
+        if (offset + patterns.length > matches.length) {
+            return notFound;
+        }
+        if(patterns.length == 0 && matches.length == 0){
+            //if no children
+            return compareEndNode(pattern, match)?
+            found(0, 0): notFound;
         }
 
         int j = 0;
         ArrayList<IASTNode> statList = null;
         int matchStart = -1;
-        for (int i = offset; i < targetChildren.length; i++) {
+        for (int i = offset; i < matches.length; i++) {
             if (j == 0) {
                 matchStart = i;
             }
-        	var key = refChildren[j].getRawSignature();
+        	var key = patterns[j].getRawSignature();
             if (key.startsWith("$$")) {
                 if (!dynamicLists.containsKey(key)) {
-                    if(j+1<refChildren.length) {
+                    if(j+1<patterns.length) {
                         statList = new ArrayList<IASTNode>();
                     	dynamicLists.put(key, statList);
-                    	statList.add(targetChildren[i]);
+                    	statList.add(matches[i]);
                     	j++;
                     }else {
-                    	dynamicLists.put(key, List.of(targetChildren));
-                    	return  new int[] {0,targetChildren.length-1};
+                    	dynamicLists.put(key, List.of(matches));
+                    	return  new int[] {0,matches.length-1};
                     }
                 }
                 
-            } else if (containNode(refChildren[j], targetChildren[i],0).length>0) {
+            } else if (containNode(patterns[j], matches[i],0).length>0) {
                 statList = null;
                 j++;
             } else {
                 if (statList != null) {
-                    statList.add(targetChildren[i]);
+                    statList.add(matches[i]);
                 } else {
                     j = 0;
                 }
             }
 
-            if (j == refChildren.length) {
+            if (j == patterns.length) {
                 return new int[]{matchStart, i};
             }
         }
-        
-        if(compareEndNode(ref, target)){
-        	return new int[]{0, 0};
-        }else {
-        	return new int[0];
-        }
+
+
     }
 
+    private int[] found(int start, int end){ return new int[]{start,end}};
 
-	private boolean compareEndNode(IASTNode ref, IASTNode target) {
+
+    private boolean compareEndNode(IASTNode ref, IASTNode target) {
 		var refString = ref.toString();
 		var targetString = target.toString();
 
