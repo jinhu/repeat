@@ -101,15 +101,6 @@ public class Snippet {
                     }
                 }
                 
-            } else if (key.startsWith("$")) {
-                statList = null;
-                if (!dynamicLists.containsKey(key)) {
-                    dynamicLists.put(key, List.of(targetChildren[i]));
-                    j++;
-                } else if (containNode(dynamicLists.get(key).get(0), targetChildren[i],0).length>0) {
-                    j++;
-                    matchStart = i;
-                }
             } else if (containNode(refChildren[j], targetChildren[i],0).length>0) {
                 statList = null;
                 j++;
