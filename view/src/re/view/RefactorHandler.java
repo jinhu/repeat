@@ -13,8 +13,8 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 
+import re.search.RefactorVisitor;
 import re.search.Refactorings;
-import re.search.CppSourceVisitor;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.TextSelection;
@@ -34,14 +34,12 @@ public class RefactorHandler extends AbstractHandler {
 
 	    IASTTranslationUnit atu = null;
 		if (selection instanceof IStructuredSelection structured) {
-		    var cu = structured.getFirstElement() ;
+		    var cu = structured.getFirstElement();
 //		    var ir = ((IFile)(cu).getResource());
 //		    if (cu instanceof ICompulationUnit) {
 //				ICOMPulationUnit new_name = (ICOMPulationUnit)cu;
 //				
 //			}
-
-			
 		}
 	    else {
 			var doc = ((TextSelection) selection).getText();
@@ -49,11 +47,14 @@ public class RefactorHandler extends AbstractHandler {
 	    	
 	    }
 		atu.accept(refactorings);
-		var visitor = new CppSourceVisitor();
+		var visitor = new RefactorVisitor();
 		visitor.setRefactorings(refactorings);
-		var cModel = CoreModel.getDefault().getCModel();
-		visitor.walk(cModel);
-		//cModel.accept(visitor);//should also work
+		
+		try {
+			CoreModel.getDefault().getCModel().accept(visitor);
+		} catch (CoreException e) {
+			e.printStackTrace();
+		}
 
 		return null;
 	}

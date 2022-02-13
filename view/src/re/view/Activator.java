@@ -11,7 +11,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
-import re.search.CppSourceVisitor;
 import re.search.Refactorings;
 import view.internal.ViewActivator;
 
