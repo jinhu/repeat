@@ -438,6 +438,8 @@
    </extension>
    <extension point="org.eclipse.ui.handlers">
       <handler class="re.view.RefactorHandler" commandId="re.view.RefactorCommand"/>
+      <handler class="re.view.ReportHandler" commandId="re.view.ReportCommand"/>
+      <handler class="re.view.ReformatHandler" commandId="re.view.ReformatCommand"/>
    </extension>
    <extension point="org.eclipse.ui.bindings">
       <key commandId="re.view.RefactorCommand"
@@ -461,8 +463,20 @@
             <command
                   id="re.view.RefactorCommand"
                   commandId="re.view.RefactorCommand"
-                  icon="resources/sample.png"
-                  tooltip="Say hello world">
+                  icon="resources/refactor.png"
+                  tooltip="refactor at function level">
+            </command>
+            <command
+                  id="re.view.ReformatCommand"
+                  commandId="re.view.ReformatCommand"
+                  icon="resources/reformat.png"
+                  tooltip="reformart at file level">
+            </command>
+            <command
+                  id="re.view.ReportCommand"
+                  commandId="re.view.ReportCommand"
+                  icon="resources/report.png"
+                  tooltip="report at wokrspace level">
             </command>
          </toolbar>
       </menuContribution>
