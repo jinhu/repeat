@@ -28,6 +28,11 @@ Workflow {
 				genericIde = {
 					name ="act"
 				}
+				eclipsePluginTest = {
+					enabled = true
+					name = "validate"
+					
+				}
 			}
 			code = {
 				encoding = "windows-1252"
@@ -42,7 +47,7 @@ Workflow {
 			fileExtensions = "refactor"
 
 			serializer = {
-				generateStub = false
+				generateStub = true
 			}
 			validator = {
 				// composedCheck = "org.eclipse.xtext.validation.NamesAreUniqueValidator"

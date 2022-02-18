@@ -28,8 +28,8 @@
 		<module>act</module>
 		<module>view</module>
 		<module>serve</module>
-		<module>spect</module>
-		<module>target</module>
+		<!--module>spect</module>
+		<module>target</module-->
 	</modules>
 	<dependencyManagement>
 		<dependencies>
@@ -57,7 +57,7 @@
 				<configuration>
 					<target>
 						<artifact>
-							<groupId>re</groupId>
+							<groupId>hu.jinmin</groupId>
 							<artifactId>re.target</artifactId>
 							<version>${project.version}</version>
 						</artifact>

@@ -1,4 +1,3 @@
-
 package re.search;
 
 import org.eclipse.cdt.core.dom.ast.ASTVisitor;

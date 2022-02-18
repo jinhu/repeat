@@ -23,7 +23,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Map;
 
-@Path("/api/initiative")
+@Path("/diagram")
 public class UmlServlet implements Servlet {
 
 	@Override
@@ -80,6 +80,7 @@ a->b
 
 		response.getWriter().append(new String(os.toByteArray()));
 	}
+	
 	
 	@GET
     @Path("/")

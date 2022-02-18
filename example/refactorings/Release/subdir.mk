@@ -6,11 +6,11 @@
 C_SRCS += \
 ../example.refactor.c 
 
-C_DEPS += \
-./example.refactor.d 
-
 OBJS += \
 ./example.refactor.o 
+
+C_DEPS += \
+./example.refactor.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes
@@ -21,11 +21,4 @@ OBJS += \
 	@echo 'Finished building: $<'
 	@echo ' '
 
-
-clean: clean--2e-
-
-clean--2e-:
-	-$(RM) ./example.refactor.d ./example.refactor.o
-
-.PHONY: clean--2e-
 

@@ -10,6 +10,5 @@ Require-Bundle: re.factor,
  org.eclipse.xtext.ide,
  org.eclipse.xtext.xbase.ide,
  org.antlr.runtime;bundle-version="[3.2.0,3.2.1)"
-Bundle-RequiredExecutionEnvironment: JavaSE-11
 Export-Package: re.ide.contentassist.antlr.internal,
  re.ide.contentassist.antlr
