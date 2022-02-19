@@ -1,5 +1,7 @@
 package re.search;
 
+import java.util.regex.Pattern;
+
 import org.eclipse.cdt.core.dom.ast.ASTVisitor;
 import org.eclipse.cdt.core.dom.ast.IASTStatement;
 import org.eclipse.cdt.core.dom.ast.IASTTranslationUnit;
@@ -22,18 +24,14 @@ import re.use.CppSourceVisitor;
  * The activator class controls the plug-in life cycle
  */
 public class RefactorVisitor  extends CppSourceVisitor{
-	private IProgressMonitor progressMonitor;
-	private ASTRewrite rewrite;
 	private Refactorings refactor;
 	
-	public RefactorVisitor(){
-		progressMonitor = BasicMonitor.toIProgressMonitorWithBlocking(new Printing(System.out));
-    }
-
-	@Override
+@Override
 	public void porcessfile(IASTTranslationUnit atu) {
-		rewrite = ASTRewrite.create(atu);
-        atu.accept(blockVisitor);
+		if(Pattern.matches(refactor.getFileFilter(),  atu.getFilePath())) {
+			rewrite = ASTRewrite.create(atu);
+			atu.accept(blockVisitor);
+		}
 	}
 
 	public void setRefactorings(Refactorings refactor) {
