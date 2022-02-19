@@ -88,11 +88,17 @@
 						<version>2.1.1</version>
 					</dependency>
 					<dependency>
+						<groupId>de.mhoffrogge.attached</groupId>
+						<artifactId>org.eclipse.cdt.core</artifactId>
+						<version>5.11.0</version>
+					</dependency>
+
+					<!-- <dependency>
 						<groupId>org.eclipse.cdt</groupId>
 						<artifactId>org.eclipse.cdt.core</artifactId>
 						<version>7.2.0.202102251239</version>
 						<scope>compile</scope>
-					</dependency>
+					</dependency> -->
 				</dependencies>
 			</plugin>
 			<plugin>

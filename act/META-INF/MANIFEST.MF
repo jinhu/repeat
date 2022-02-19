@@ -1,10 +1,10 @@
 Manifest-Version: 1.0
-Automatic-Module-Name: re.ide
+Automatic-Module-Name: re.act
 Bundle-ManifestVersion: 2
-Bundle-Name: re.ide
+Bundle-Name: re.act
 Bundle-Vendor: Jinmin Hu
 Bundle-Version: 0.1.0
-Bundle-SymbolicName: re.ide; singleton:=true
+Bundle-SymbolicName: re.act; singleton:=true
 Bundle-ActivationPolicy: lazy
 Require-Bundle: re.factor,
  org.eclipse.xtext.ide,

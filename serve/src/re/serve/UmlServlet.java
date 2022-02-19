@@ -65,12 +65,7 @@ public class UmlServlet implements Servlet {
 //            System.out.println("Can't save file in "+outPath);
 //            System.out.println(uml);
 //        }
-        var reader = new SourceStringReader("""
-        		@startuml 
-a->b
-@enduml
-
-        		""");
+        var reader = new SourceStringReader("@startuml\na->b\n@enduml");
         final ByteArrayOutputStream os = new ByteArrayOutputStream();
         var option = new FileFormatOption(net.sourceforge.plantuml.FileFormat.SVG);
         String string = reader.outputImage( os, option).getDescription();
