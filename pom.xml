@@ -28,8 +28,8 @@
 		<module>act</module>
 		<module>view</module>
 		<module>serve</module>
-		<!--module>spect</module>
-		<module>target</module-->
+		<!--module>spect</module-->
+		<module>target</module>
 	</modules>
 	<dependencyManagement>
 		<dependencies>

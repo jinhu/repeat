@@ -1,9 +1,25 @@
 grammar re.Factor with org.eclipse.xtext.common.Terminals
-
 generate factor "http://www.Factor.re"
 
-Model:
-	greetings+=Greeting*;
+C:
+	greetings+=Greeting*
+	header = Header
+	content = Content
+	
+;
+
+Content:
+	statements = Statement	
+;
+
+enum Statement:
+	While|If|Fun|Do
+	
+;
+
+Header:
+	"/*  */"
+;
 	
 Greeting:
-	'Hello' name=ID '!';
+	'# Hello' name=ID '!';
