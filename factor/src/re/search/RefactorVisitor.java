@@ -1,6 +1,7 @@
 package re.search;
 
 import java.util.Arrays;
+import java.util.regex.Pattern;
 
 import org.eclipse.cdt.core.dom.ast.ASTVisitor;
 import org.eclipse.cdt.core.dom.ast.IASTPreprocessorIfdefStatement;
@@ -27,39 +28,18 @@ import re.use.CppSourceVisitor;
  * The activator class controls the plug-in life cycle
  */
 public class RefactorVisitor  extends CppSourceVisitor{
-	private IProgressMonitor progressMonitor;
-	private ASTRewrite rewrite;
 	private Refactorings refactor;
 	private TextMatcher textVisitor;
 	
-	public RefactorVisitor(){
-		progressMonitor = BasicMonitor.toIProgressMonitorWithBlocking(new Printing(System.out));
-    }
-
-	@Override
+@Override
 	public void porcessfile(IASTTranslationUnit atu) {
 		rewrite = ASTRewrite.create(atu);
 		textVisitor = new TextMatcher(atu, rewrite);
         atu.accept(blockVisitor);
         
         atu.accept(textVisitor);
-		
-        
-//        Arrays.stream(atu.getAllPreprocessorStatements())
-//        .filter(m->m.getContainingFilename().contains(atu.getFilePath()))
-//        .forEach(this::removeObsoleteBranches);
-//        
-//     	var change = rewrite.rewriteAST();
-//     	try {
-//			change.perform(progressMonitor);
-//		} catch (CoreException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//        for (var macro : macros) {
-//			System.out.println(macro.getRawSignature()+" from "+macro.getContainingFilename());
-//		}
-        
+    
+    
 	}
 
 	public void setRefactorings(Refactorings refactor) {
