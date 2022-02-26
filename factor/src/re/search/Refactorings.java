@@ -25,6 +25,7 @@ public class Refactorings extends ASTVisitor {
 		super(true);
 	}
 	public List<ICPPASTIfStatement> replacements = new ArrayList<>();
+	public List<ICPPASTIfStatement> macros = new ArrayList<>();
 	List<ICPPASTFunctionCallExpression> custom = new ArrayList<>();
 	Map<String, String> properties = new HashMap<>();
 
@@ -36,6 +37,8 @@ public class Refactorings extends ASTVisitor {
 				importRefactor(fun);
 			}else if(fun.getDeclarator().getName().toString().contains("clean_up")) {		
 				importCleanups(fun);
+			}else if(fun.getDeclarator().getName().toString().contains("context")) {		
+			importContext(fun);
 			}
 		} 
 		else if (declaration instanceof CPPASTSimpleDeclaration prop) {
@@ -53,6 +56,13 @@ public class Refactorings extends ASTVisitor {
 		
 	}
 
+	private void importContext(ICPPASTFunctionDefinition fun) {
+		for(var node :fun.getBody().getChildren()) {
+			if (node instanceof ICPPASTIfStatement ifStatement) {
+				macros.add(ifStatement);
+			}
+		}
+	}
 	private void importRefactor(ICPPASTFunctionDefinition fun) {
 		for(var node :fun.getBody().getChildren()) {
 			if (node instanceof ICPPASTIfStatement ifStatement) {
