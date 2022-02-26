@@ -1,0 +1,26 @@
+!!re.format.Renewer
+codeBase: /mnt/c/sw-dev/demo/voctir/
+binaryExtension: [so, ddb, pyc, pye, vpi, a, o]
+renamings:
+    re?cv: receive_
+    voctir: victor
+    cop: copy_
+    bld: build_
+    cmd: command_
+    overwt: overwrite_
+updates:
+    recv: receive_
+    \x12: ""
+    ;\\+\\+: ""
+    "\\n;\\s*\\n": "\n"
+    "; \\$Id:.*\\$": ""
+    "; \\$Log:.*\\$": ""
+    ";\\n;\\s+\\(c\\) .*\\d+\\n;\\s+All rights reserved.\\n;\\n": " (c) Example B.V. 2022   All rights reserved.\n"
+    ";  FUNCTIONAL DESCRIPTION:\\n;  (.*)": "/// $1"
+    ";  PRECONDITIONS:\n;  (.*)": "@Preconditions $1"
+    ";  KNOWN LIMITATIONS:\n;  (.*)": "@Limitations $1"
+    ";  (\\S+)    (.*)": "@param $1\t$2"
+    "static\\s+(\\S+) ?\\(": "int $1("
+    "static\\s+(\\S+)\\s+(\\S+) ?\\(": "$1 $2("
+    "extern int    errno;": "#include <errno.h>\nextern int    errno;"
+    "extern char.*sys_errlist\\[\\];": ""

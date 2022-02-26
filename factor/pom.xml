@@ -16,6 +16,11 @@
 			<artifactId>org.eclipse.emf.common</artifactId>
 		</dependency>
 		<dependency>
+		    <groupId>org.yaml</groupId>
+		    <artifactId>snakeyaml</artifactId>
+		    <version>1.30</version>
+		</dependency>
+		<dependency>
 			<groupId>org.eclipse.ltk.core</groupId>
 			<artifactId>refactoring</artifactId>
 			<version>3.3.0-v20070606-0010</version>
