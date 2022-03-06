@@ -3,6 +3,7 @@ package re.port;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,12 +20,13 @@ import org.eclipse.cdt.core.dom.ast.cpp.ICPPASTFunctionDeclarator;
 import org.eclipse.cdt.core.dom.ast.cpp.ICPPASTFunctionDefinition;
 import org.eclipse.cdt.core.dom.ast.gnu.cpp.GPPLanguage;
 import org.eclipse.cdt.core.index.IIndex;
+import org.eclipse.cdt.core.model.ICElement;
 import org.eclipse.cdt.core.parser.DefaultLogService;
 import org.eclipse.cdt.core.parser.FileContent;
 import org.eclipse.cdt.core.parser.IParserLogService;
 import org.eclipse.cdt.core.parser.IncludeFileContentProvider;
 import org.eclipse.cdt.core.parser.ScannerInfo;
-import org.eclipse.cdt.internal.core.dom.parser.cpp.CPPASTSimpleDeclaration;
+import org.eclipse.cdt.internal.core.model.FunctionDeclaration;
 
 public class Reporter {
 
@@ -59,54 +61,37 @@ public class Reporter {
 </edge>""";
 	
 	private int id;
-//
-//	@Override
-//	public int visit(IASTDeclarator declarator) {
-//		try {
-//			var location = declarator.getFileLocation();
-//			Files.writeString(graphml, String.format(node,id++, declarator.getName(), location.getFileName(), location.getFileName(), location.getStartingLineNumber()));
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//
-//		return super.visit(declarator);
-//	}
-//
-//	@Override
-//	public int visit(IASTStatement designator) {
-//		try {
-//			var location = designator.getFileLocation();
-//			Files.writeString(graphml,String.format(node,id++, designator, location.getFileName(), location.getFileName(), location.getStartingLineNumber()));
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//
-//		return super.visit(designator);
-//	}
-//	public void toText(String content) throws IOException {
-//		Files.writeString(graphml, header);
-//		Files.writeString(graphml, footer);
-//		
-//	}
+	private Path graphml = Path.of("/mnt/c/sw-dev/result.graphml");
 
-	public CharSequence reportContainment(IASTFunctionDeclarator declarator) {
-		var location = declarator.getFileLocation();
-		return  String.format(node,id++, declarator.getName(), 
+	public void start() throws IOException {
+		Files.writeString(graphml, header);
+	}
+	public void finish() throws IOException {
+		Files.writeString(graphml, footer,StandardOpenOption.APPEND);
+	}
+
+//	public void reportContainment(IASTFunctionDeclarator declarator) throws IOException {
+//		var location = declarator.getFileLocation();
+//		Files.writeString(graphml,  String.format(node,id++, declarator.getName(), 
+//				location.getFileName(), location.getFileName(), location.getStartingLineNumber()),StandardOpenOption.APPEND);
+//	}
+//
+//	public void reportContainment(IASTDeclarator declarator) {
+//		var location = declarator.getFileLocation();
+//		return  String.format(node,id++, declarator.getName(), 
+//				location.getFileName(), location.getFileName(), location.getStartingLineNumber());
+//	}
+//	
+	public void appendEdge(String currentFun, ICPPASTFunctionCallExpression fun) throws IOException {
+		var location = fun.getFileLocation();
+		var text = String.format(edge ,id++, currentFun, fun.getFunctionNameExpression(), 
 				location.getFileName(), location.getFileName(), location.getStartingLineNumber());
+		Files.writeString(graphml, text, StandardOpenOption.APPEND);
 	}
 
-	public CharSequence reportContainment(IASTDeclarator declarator) {
-		var location = declarator.getFileLocation();
-		return  String.format(node,id++, declarator.getName(), 
-				location.getFileName(), location.getFileName(), location.getStartingLineNumber());
+	public void appendNode(FunctionDeclaration fun) throws IOException {
+		var text =  String.format(node,id++, fun, fun.getTypeString(), fun.getAncestor(ICElement.C_CCONTAINER), fun.getLocationURI());
+		Files.writeString(graphml, text, StandardOpenOption.APPEND);
 	}
-	public CharSequence reportRelation(String currentFun, ICPPASTFunctionCallExpression fun) {
-			var location = fun.getFileLocation();
-			return  String.format(edge ,id++, currentFun, fun.getFunctionNameExpression(), 
-					location.getFileName(), location.getFileName(), location.getStartingLineNumber());
-	}
-
 
 }

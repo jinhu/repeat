@@ -1,26 +1,57 @@
 !!re.format.Renewer
 codeBase: /mnt/c/sw-dev/demo/voctir/
-binaryExtension: [so, ddb, pyc, pye, vpi, a, o]
+binaryExtension: [so, ddb, pyc, pye, vpi, a]
+ignore: ".*(_ccmwaid\\.inf|\\.git.*|\\.o)"
+content: [c, h, Makefile, ""]
 renamings:
-    re?cv: receive_
-    voctir: victor
-    cop: copy_
-    bld: build_
-    cmd: command_
-    overwt: overwrite_
+    voctir: "victor"
+#    cop: copy_
+#    bld: build_
+#    cmd: command_    
+#    overwt: overwrite_
+    re?cv: receive
+    qry: query
+    snd: send
+    ers: erase
+    disp: dispatcher
+    remot: remote
+    po?ng: pong
+    spf:   spool
+    rspf: remote_spool
+    sericomm: common
+    "[Ss]mtpseri": smtp_bridge
+    locio: local_io
+    "[Mm]akeseri": victor
+    "/usr2n/seridev": "/mnt/c/sw-dev/demo/victor"
+    seri: victor
 updates:
-    recv: receive_
-    \x12: ""
-    ;\\+\\+: ""
-    "\\n;\\s*\\n": "\n"
-    "; \\$Id:.*\\$": ""
-    "; \\$Log:.*\\$": ""
-    ";\\n;\\s+\\(c\\) .*\\d+\\n;\\s+All rights reserved.\\n;\\n": " (c) Example B.V. 2022   All rights reserved.\n"
-    ";  FUNCTIONAL DESCRIPTION:\\n;  (.*)": "/// $1"
-    ";  PRECONDITIONS:\n;  (.*)": "@Preconditions $1"
-    ";  KNOWN LIMITATIONS:\n;  (.*)": "@Limitations $1"
-    ";  (\\S+)    (.*)": "@param $1\t$2"
+    \x12:          "\n"
+    ;\+\+:         "\n"
+    "\n;\\s*\n":     "\n"
+    "[;#] \\$Id.*\\$":    "\n"
+    "[;#] \\$Log.*\\$":   "\n"
+    ";\n;\\s+\\(c\\) .*\\d+\n;\\s+All rights reserved.\n;\n": " (c) Example B.V. 2022   All rights reserved.\n"
+    ";  FUNCTIONAL DESCRIPTION.\\n;  (.*)": "@brief $1"
+    ";  FORMAL PARAMETERS:": ""
+    ";  CALLING SEQUENCE:": "@sequence"
+    ";  PRECONDITIONS:\\n;  (.*)": "@preconditions $1"
+    ";  KNOWN LIMITATIONS:\\n;  (.*)": "@limitations $1"
+    ";  (\\S+)(    |	-	)(.*)": "@param $1\t$2"
+    ";--": ""
     "static\\s+(\\S+) ?\\(": "int $1("
     "static\\s+(\\S+)\\s+(\\S+) ?\\(": "$1 $2("
-    "extern int    errno;": "#include <errno.h>\nextern int    errno;"
+    "extern int    errno;":  "#include <errno.h>\nextern int    errno;"
     "extern char.*sys_errlist\\[\\];": ""
+    " . Revision \\S*  (\\S*)  \\S*  (\\w*).*\\n .(.*)\\n .(.*)": "#$1\t$2\t$3$4"
+    "status = receive ": "status = recv "
+    "\\n": "@@@"
+    "#ifdef OSF@@@.*@@@#endif@@@": "@@@"
+    "\\@\\@\\@": "\n"
+refactor: |
+  refactor{
+    replace{
+       int x;
+    }with{
+       int y;
+    }
+
