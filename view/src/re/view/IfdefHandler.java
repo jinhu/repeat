@@ -89,9 +89,9 @@ public class IfdefHandler extends AbstractHandler implements ICElementVisitor {
 	@Override
 	public boolean visit(ICElement element) throws CoreException {
 		if(element instanceof TranslationUnit tu) {
-			System.out.println("found "+tu.getFile().toString());
+			
 			var atu = tu.getAST();
-            if(atu!=null) {
+            if(atu!=null) { // && tu.getFile().toString().contains("/memo/memmain.c")) {
         		rewrite = ASTRewrite.create(atu);
         		try {
 					remove(atu,"OSF");
@@ -143,22 +143,21 @@ public class IfdefHandler extends AbstractHandler implements ICElementVisitor {
             if (stmt instanceof IASTPreprocessorIfdefStatement
             ||  stmt instanceof IASTPreprocessorIfndefStatement
             ||  stmt instanceof IASTPreprocessorIfStatement) {
-            	var ifdef =(IASTPreprocessorIfdefStatement)stmt;
-            		if (ifdef!=null && ifdef.getMacroReference() != null
+            		if (stmt instanceof IASTPreprocessorIfdefStatement ifdef && ifdef.getMacroReference() != null
     				&&ifdef.getMacroReference().isReference() &&ifdef.getMacroReference().getRawSignature().equals(macroName)) {
             					start = ifdef.getFileLocation().getStartingLineNumber();
             					startDepth = defCount;
     				}
         		defCount++;
             }else if(stmt instanceof IASTPreprocessorElseStatement elseif) {
-            	if (defCount == startDepth) {
+            	if (defCount == startDepth+1) {
                     middle = elseif.getFileLocation().getStartingLineNumber();
             	
             	}
             }
             else if (stmt instanceof IASTPreprocessorEndifStatement endif) {
                 defCount--;
-                if (defCount == startDepth && startDepth > 0) {
+                if (defCount == startDepth && startDepth >= 0) {
                     end = endif.getFileLocation().getStartingLineNumber();
                     if(middle==0) {
                     	middle =end;
