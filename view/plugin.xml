@@ -440,6 +440,7 @@
       <handler class="re.view.RefactorHandler" commandId="re.view.RefactorCommand"/>
       <handler class="re.view.ReportHandler" commandId="re.view.ReportCommand"/>
       <handler class="re.view.ReformatHandler" commandId="re.view.ReformatCommand"/>
+      <handler class="re.view.IfdefHandler" commandId="re.view.IfdefCommand"/>
    </extension>
    <extension point="org.eclipse.ui.bindings">
       <key commandId="re.view.RefactorCommand"
@@ -477,6 +478,12 @@
                   commandId="re.view.ReportCommand"
                   icon="resources/report.png"
                   tooltip="report at wokrspace level">
+            </command>
+            <command
+                  id="re.view.IfdefCommand"
+                  commandId="re.view.IfdefCommand"
+                  icon="resources/ifdef.png"
+                  tooltip="remove ifdef at wokrspace level">
             </command>
          </toolbar>
       </menuContribution>
