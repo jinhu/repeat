@@ -78,17 +78,5 @@ public class RefactorVisitor  extends CppSourceVisitor{
 				var mark = true;
 			}
 		}
-//		if(macro instanceof IASTPreprocessor ifdef) {
-//			if(ifdef.getCondition().toString().equals("MSC"){
-//				mark = true;
-//			}
-//		}
-//			if(ifdef.getCondition().toString().equals("MSC"){
-//				mark = true;
-//			}
-//			if(ifdef.getCondition().toString().equals("MSC"){
-//				mark = true;
-//			}
-//		}
 	}
 }
