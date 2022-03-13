@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: re.view
 Bundle-SymbolicName: re.view;singleton:=true
-Bundle-Version: 0.1.0
+Bundle-Version: 0.1.1
 Bundle-ActivationPolicy: lazy
 Export-Package: re.ui.contentassist,
  re.ui.quickfix,

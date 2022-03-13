@@ -44,9 +44,6 @@ updates:
     "extern char.*sys_errlist\\[\\];": ""
     " . Revision \\S*  (\\S*)  \\S*  (\\w*).*\\n .(.*)\\n .(.*)": "#$1\t$2\t$3$4"
     "status = receive ": "status = recv "
-    "\\n": "@@@"
-    "#ifdef OSF@@@.*@@@#endif@@@": "@@@"
-    "\\@\\@\\@": "\n"
 refactor: |
   refactor{
     replace{

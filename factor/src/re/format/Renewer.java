@@ -132,9 +132,10 @@ public class Renewer {
 
 	private void cloneContent(Path source, Path target) throws IOException {
 			var text = Files.readString(source);
-
+//			text = text.replace("\n", "@@@");
 			text = replaceText(text, renamings);
 			text = replaceText(text, updates);
+//			text = text.replace("@@@", "\n");
 			if(source.toString().endsWith(".c")) {
 				refactor(source, text);
 			}
