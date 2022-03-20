@@ -17,9 +17,17 @@ import org.eclipse.cdt.internal.core.dom.parser.cpp.CPPASTFunctionDefinition;
 
 import re.use.Helper;
 
-public class MakefileLoader {
+public class MakefileLoader  implements Appl {
 
-	private String makefile;
+    @Override
+    public void start(String[] args) {
+        try {
+            var loader = new MakefileLoader(args);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+   private String makefile;
 	private String target;
 	private HashMap<String, String> macroDefinitions;
 	private ScannerInfo scanInfo;
