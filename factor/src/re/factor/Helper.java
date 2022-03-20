@@ -1,4 +1,4 @@
-package re.use;
+package re.factor;
 
 import org.eclipse.cdt.core.dom.ast.IASTNode;
 import org.eclipse.cdt.core.dom.ast.IASTTranslationUnit;

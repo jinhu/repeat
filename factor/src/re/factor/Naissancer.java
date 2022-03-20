@@ -1,4 +1,4 @@
-package re.command;
+package re.factor;
 
 import org.eclipse.cdt.core.dom.ast.IASTFunctionCallExpression;
 import org.eclipse.cdt.core.dom.ast.IASTIfStatement;
@@ -7,8 +7,6 @@ import org.eclipse.cdt.core.dom.ast.cpp.ICPPASTFunctionDefinition;
 import org.eclipse.cdt.core.dom.ast.gnu.cpp.GPPLanguage;
 import org.eclipse.cdt.core.index.IIndex;
 import org.eclipse.cdt.core.parser.*;
-
-import re.use.Appl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -45,7 +43,7 @@ public class Naissancer implements Appl {
                     }
                 }
                 """.toCharArray());
-        IncludeFileContentProvider fileCreator = new re.use.Helper.EmptyFileContentProvider();
+        IncludeFileContentProvider fileCreator = new Helper.EmptyFileContentProvider();
         IIndex index = null;
         int options = 0;
         IParserLogService log = new DefaultLogService();

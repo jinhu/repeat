@@ -1,17 +1,8 @@
 package re.view;
 
-import java.util.Iterator;
-
-import org.eclipse.cdt.core.dom.ast.IASTTranslationUnit;
-import org.eclipse.cdt.core.model.CoreModel;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jface.text.TextSelection;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
-import re.search.Refactorings;
 import view.internal.ViewActivator;
 
 /**

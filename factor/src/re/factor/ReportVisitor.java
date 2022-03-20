@@ -1,4 +1,4 @@
-package re.port;
+package re.factor;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -11,16 +11,7 @@ import org.eclipse.cdt.core.dom.ast.IASTStatement;
 import org.eclipse.cdt.core.dom.ast.IASTTranslationUnit;
 import org.eclipse.cdt.core.dom.ast.cpp.ICPPASTFunctionCallExpression;
 import org.eclipse.cdt.core.dom.ast.cpp.ICPPASTFunctionDefinition;
-import org.eclipse.cdt.core.dom.rewrite.ASTRewrite;
-import org.eclipse.cdt.core.model.CModelException;
-import org.eclipse.cdt.core.model.ICElement;
-import org.eclipse.cdt.core.model.ICElementVisitor;
-import org.eclipse.cdt.core.model.ICModel;
-import org.eclipse.cdt.core.model.ITranslationUnit;
 import org.eclipse.cdt.internal.core.dom.parser.cpp.CPPASTSimpleDeclaration;
-import org.eclipse.core.runtime.CoreException;
-
-import re.use.CppSourceVisitor;
 
 public class ReportVisitor extends CppSourceVisitor {
 	private Path graphml = Path.of("c:\\sw-dev\\result.graphml");

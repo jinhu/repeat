@@ -1,26 +1,49 @@
-package re.format;
+package re.factor;
 
 import org.eclipse.cdt.core.dom.ast.ASTVisitor;
 import org.eclipse.cdt.core.dom.ast.IASTTranslationUnit;
 import org.eclipse.cdt.core.dom.rewrite.ASTRewrite;
-import org.eclipse.cdt.internal.core.dom.rewrite.commenthandler.ASTCommenter;
+import org.eclipse.cdt.core.model.ICElement;
+import org.eclipse.cdt.core.model.ICElementVisitor;
+import org.eclipse.cdt.core.model.ITranslationUnit;
+import org.eclipse.cdt.core.model.CoreModel;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.emf.common.util.BasicMonitor;
+import org.eclipse.emf.common.util.BasicMonitor.Printing;
 
-import re.use.CppSourceVisitor;
-
-public class ReformatVisitor extends CppSourceVisitor {
+public class ReformatVisitor {
 
 
-	private ASTVisitor commentVisitor = new ASTVisitor() {
-//		visit()
+	protected ASTRewrite rewrite;
+	protected IProgressMonitor progressMonitor = BasicMonitor.toIProgressMonitorWithBlocking(new Printing(System.out));
+
+
+	private ICElementVisitor commentVisitor = new ICElementVisitor() {
+		@Override
+		public boolean visit(ICElement element) throws CoreException {
+			if(element instanceof ITranslationUnit tu) {
+				var atu = tu.getAST();
+	            if(atu!=null) {
+					rewrite = ASTRewrite.create(atu);
+					rewrite.removeAllComments(atu);
+				}
+	    		try {
+	    			var changes = rewrite.rewriteAST();
+	    				changes.perform(progressMonitor);
+    			} catch (CoreException e) {
+    				e.printStackTrace();
+    			}
+
+			}
+			return true;
+		}
 	};
 
-	@Override
-	public void porcessfile(IASTTranslationUnit atu) {
-		var factory = atu.getASTNodeFactory();
-//		factory.newc
-		rewrite = ASTRewrite.create(atu);
-		rewrite.removeAllComments(atu);
+	private String formatComment(char[] comment) {
+		var text =  new String(comment);
+		return text.replaceAll("^Revision .*$", "");
+	}
 			
 //			//var comm = new IASTComment.("/*new comment*/");
 ////			comm.getChildren();
@@ -68,19 +91,6 @@ public class ReformatVisitor extends CppSourceVisitor {
 //		var comment = atu.getComments();
 //		rewrite.removeAllComments(atu);
 //		rewrite.remove(atu, null);
-		var changes = rewrite.rewriteAST();
-		try {
-			changes.perform(progressMonitor);
-		} catch (CoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		}
-
-	private String formatComment(char[] comment) {
-		var text =  new String(comment);
-		return text.replaceAll("^Revision .*$", "");
-	}
 
 }
 //ASTLiteralNode

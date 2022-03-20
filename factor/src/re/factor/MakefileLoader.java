@@ -1,4 +1,4 @@
-package re.load;
+package re.factor;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -14,8 +14,6 @@ import org.eclipse.cdt.core.dom.ast.IASTTranslationUnit;
 import org.eclipse.cdt.core.dom.ast.cpp.ICPPASTFunctionDefinition;
 import org.eclipse.cdt.core.parser.ScannerInfo;
 import org.eclipse.cdt.internal.core.dom.parser.cpp.CPPASTFunctionDefinition;
-
-import re.use.Helper;
 
 public class MakefileLoader  implements Appl {
 

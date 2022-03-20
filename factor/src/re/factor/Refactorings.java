@@ -1,4 +1,4 @@
-package re.search;
+package re.factor;
 
 import java.util.ArrayList;
 import java.util.HashMap;

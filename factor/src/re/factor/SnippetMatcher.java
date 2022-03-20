@@ -1,4 +1,4 @@
-package re.search;
+package re.factor;
 
 import org.eclipse.cdt.core.dom.ast.IASTCompoundStatement;
 import org.eclipse.cdt.core.dom.ast.IASTNode;

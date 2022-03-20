@@ -1,4 +1,4 @@
-package re.use;
+package re.factor;
 
 import org.eclipse.core.runtime.CoreException;
 

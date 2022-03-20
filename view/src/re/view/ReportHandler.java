@@ -8,7 +8,7 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.CoreException;
 
-import re.port.ReportVisitor;
+import re.factor.ReportVisitor;
 
 public class ReportHandler extends AbstractHandler {
 

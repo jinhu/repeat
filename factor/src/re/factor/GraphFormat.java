@@ -1,4 +1,4 @@
-package re.format;
+package re.factor;
 
 import java.io.File;
 import java.io.IOException;

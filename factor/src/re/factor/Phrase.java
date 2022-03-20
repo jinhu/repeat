@@ -1,12 +1,12 @@
-package re.format;
+package re.factor;
 
-import re.model.AbstractAstModel;
+
 
 public class Phrase {
 	public static String TITLE ="Hello Re";
 	public GraphFormat graph;
 	
-	public Phrase(AbstractAstModel model) {
+	public Phrase() {
 		graph = new GraphFormat();
 //		graph.toText("c:\\sw-dev\\demo\\yed.graphml");
 	}

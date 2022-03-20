@@ -16,9 +16,10 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 
-import re.search.RefactorVisitor;
-import re.search.Refactorings;
-import re.use.Helper;
+
+import re.factor.Helper;
+import re.factor.RefactorVisitor;
+import re.factor.Refactorings;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.TextSelection;
