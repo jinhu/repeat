@@ -31,82 +31,31 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import re.factor.Helper;
 import re.factor.Refactorings;
 
-public class RefactorHandler extends AbstractHandler implements ICElementVisitor{
-
-	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException {
-		try {
-			refactorings = getRefactoring(event);
-			CoreModel.getDefault().getCModel().accept(this);
-		} catch (CoreException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-	Refactorings refactorings;
-	ASTRewrite rewrite;
-
-	protected IProgressMonitor progressMonitor = BasicMonitor.toIProgressMonitorWithBlocking(new Printing(System.out));
-
-	@Override
-	public boolean visit(ICElement element) throws CoreException {
-		HandlerHelper.visit(visitor, element, progressMonitor);
-		return true;
-	}
-
-	ASTVisitor visitor = new ASTVisitor(true) {
-        @Override
-        public int visit(IASTStatement statement) {
-        	if (statement instanceof ICPPASTCompoundStatement block) {
-	        		refactorings.process(rewrite, block);
-			}
-        	return super.visit(statement);
-        }
-    };
-
-
-	private Refactorings getRefactoring(ExecutionEvent event) throws ExecutionException {
-		try {
-			refactorings = getRefactoring(event);
-			CoreModel.getDefault().getCModel().accept(this);
-		} catch (CoreException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-	Refactorings refactorings;
-	ASTRewrite rewrite;
-
-	protected IProgressMonitor progressMonitor = BasicMonitor.toIProgressMonitorWithBlocking(new Printing(System.out));
-
-	@Override
-	public boolean visit(ICElement element) throws CoreException {
+public class HandlerHelper {
+	static public void visit(ASTVisitor visitor, ICElement element, IProgressMonitor progressMonitor) throws CoreException { 
 		if(element instanceof ITranslationUnit tu) {
 			var atu = tu.getAST();
             if(atu!=null) {
-        		rewrite = ASTRewrite.create(atu);
+        		var rewrite = ASTRewrite.create(atu);
                 atu.accept(visitor);
             	var change = rewrite.rewriteAST();
             	change.perform(progressMonitor);
 			}
 		}
-		return true;
 	}
 
 	ASTVisitor visitor = new ASTVisitor(true) {
         @Override
         public int visit(IASTStatement statement) {
         	if (statement instanceof ICPPASTCompoundStatement block) {
-	        		refactorings.process(rewrite, block);
-			}
-        	return super.visit(statement);
-        }
+//	        		refactorings.process(rewrite, block);
+			} 
+        	return super.visit(statement);    	
+        }  
     };
-
-
-	private Refactorings getRefactoring(ExecutionEvent event) throws ExecutionException {
+    
+	
+	public Refactorings getRefactoring(ExecutionEvent event) throws ExecutionException {
 		var window = HandlerUtil.getActiveWorkbenchWindowChecked(event);
 		var selectionService = window.getSelectionService();
 		IWorkbenchPart workbenchPart = window.getActivePage().getActivePart(); 
