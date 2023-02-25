@@ -26,5 +26,6 @@ Export-Package: re,
  re.scoping,
  re.serializer,
  re.services,
- re.validation
+ re.validation,
+ re.generator
 Import-Package: org.apache.log4j

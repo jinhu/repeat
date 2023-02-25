@@ -44,26 +44,39 @@ public class RefactorHandler extends AbstractHandler implements ICElementVisitor
 		return null;
 	}
 
-	Refactorings refactorings;
-	ASTRewrite rewrite;
 
-	protected IProgressMonitor progressMonitor = BasicMonitor.toIProgressMonitorWithBlocking(new Printing(System.out));
+//	private Refactorings getRefactoring(ExecutionEvent event) throws ExecutionException {
+//		var window = HandlerUtil.getActiveWorkbenchWindowChecked(event);
+//		var selectionService = window.getSelectionService();
+//		IWorkbenchPart workbenchPart = window.getActivePage().getActivePart(); 
+//		IFile file = (IFile) workbenchPart.getSite().getPage().getActiveEditor().getEditorInput().getAdapter(IFile.class);
+//		if (file == null) return null;
+//		var atu = Helper.getAtu(file.getRawLocation().toString());
+//
+//		var selection = selectionService.getSelection();
+//		var refactorings = new Refactorings();
+//		atu.accept(refactorings);
+//		return refactorings;
+//	}
+//	@Override
+//	public boolean visit(ICElement element) throws CoreException {
+//		if(element instanceof ITranslationUnit tu) {
+//			var atu = tu.getAST();
+//            if(atu!=null) {
+//        		rewrite = ASTRewrite.create(atu);
+//                atu.accept(visitor);
+//            	var change = rewrite.rewriteAST();
+//            	change.perform(progressMonitor);
+//			}
+//		}
+//		return true;
+//	}
 
 	@Override
 	public boolean visit(ICElement element) throws CoreException {
 		HandlerHelper.visit(visitor, element, progressMonitor);
 		return true;
 	}
-
-	ASTVisitor visitor = new ASTVisitor(true) {
-        @Override
-        public int visit(IASTStatement statement) {
-        	if (statement instanceof ICPPASTCompoundStatement block) {
-	        		refactorings.process(rewrite, block);
-			}
-        	return super.visit(statement);
-        }
-    };
 
 
 	private Refactorings getRefactoring(ExecutionEvent event) throws ExecutionException {
@@ -81,19 +94,6 @@ public class RefactorHandler extends AbstractHandler implements ICElementVisitor
 
 	protected IProgressMonitor progressMonitor = BasicMonitor.toIProgressMonitorWithBlocking(new Printing(System.out));
 
-	@Override
-	public boolean visit(ICElement element) throws CoreException {
-		if(element instanceof ITranslationUnit tu) {
-			var atu = tu.getAST();
-            if(atu!=null) {
-        		rewrite = ASTRewrite.create(atu);
-                atu.accept(visitor);
-            	var change = rewrite.rewriteAST();
-            	change.perform(progressMonitor);
-			}
-		}
-		return true;
-	}
 
 	ASTVisitor visitor = new ASTVisitor(true) {
         @Override
@@ -105,18 +105,4 @@ public class RefactorHandler extends AbstractHandler implements ICElementVisitor
         }
     };
 
-
-	private Refactorings getRefactoring(ExecutionEvent event) throws ExecutionException {
-		var window = HandlerUtil.getActiveWorkbenchWindowChecked(event);
-		var selectionService = window.getSelectionService();
-		IWorkbenchPart workbenchPart = window.getActivePage().getActivePart(); 
-		IFile file = (IFile) workbenchPart.getSite().getPage().getActiveEditor().getEditorInput().getAdapter(IFile.class);
-		if (file == null) return null;
-		var atu = Helper.getAtu(file.getRawLocation().toString());
-
-		var selection = selectionService.getSelection();
-		var refactorings = new Refactorings();
-		atu.accept(refactorings);
-		return refactorings;
-	}
 }
