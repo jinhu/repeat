@@ -1,4 +1,4 @@
-package re.view;
+package re.view.java;
 
 import org.eclipse.jetty.server.Server;
 import org.osgi.framework.BundleContext;

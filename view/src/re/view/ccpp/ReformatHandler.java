@@ -1,4 +1,4 @@
-package re.view;
+package re.view.ccpp;
 
 import org.eclipse.cdt.core.dom.rewrite.ASTRewrite;
 import org.eclipse.cdt.core.model.CoreModel;

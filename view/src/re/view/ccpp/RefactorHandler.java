@@ -1,4 +1,4 @@
-package re.view;
+package re.view.ccpp;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -45,19 +45,19 @@ public class RefactorHandler extends AbstractHandler implements ICElementVisitor
 	}
 
 
-//	private Refactorings getRefactoring(ExecutionEvent event) throws ExecutionException {
-//		var window = HandlerUtil.getActiveWorkbenchWindowChecked(event);
-//		var selectionService = window.getSelectionService();
-//		IWorkbenchPart workbenchPart = window.getActivePage().getActivePart(); 
-//		IFile file = (IFile) workbenchPart.getSite().getPage().getActiveEditor().getEditorInput().getAdapter(IFile.class);
-//		if (file == null) return null;
-//		var atu = Helper.getAtu(file.getRawLocation().toString());
-//
-//		var selection = selectionService.getSelection();
-//		var refactorings = new Refactorings();
-//		atu.accept(refactorings);
-//		return refactorings;
-//	}
+	private Refactorings getRefactoring(ExecutionEvent event) throws ExecutionException {
+		var window = HandlerUtil.getActiveWorkbenchWindowChecked(event);
+		var selectionService = window.getSelectionService();
+		IWorkbenchPart workbenchPart = window.getActivePage().getActivePart(); 
+		IFile file = (IFile) workbenchPart.getSite().getPage().getActiveEditor().getEditorInput().getAdapter(IFile.class);
+		if (file == null) return null;
+		var atu = Helper.getAtu(file.getRawLocation().toString());
+
+		var selection = selectionService.getSelection();
+		var refactorings = new Refactorings();
+		atu.accept(refactorings);
+		return refactorings;
+	}
 //	@Override
 //	public boolean visit(ICElement element) throws CoreException {
 //		if(element instanceof ITranslationUnit tu) {
@@ -78,16 +78,6 @@ public class RefactorHandler extends AbstractHandler implements ICElementVisitor
 		return true;
 	}
 
-
-	private Refactorings getRefactoring(ExecutionEvent event) throws ExecutionException {
-		try {
-			refactorings = getRefactoring(event);
-			CoreModel.getDefault().getCModel().accept(this);
-		} catch (CoreException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
 
 	Refactorings refactorings;
 	ASTRewrite rewrite;
