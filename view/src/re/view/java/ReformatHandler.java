@@ -1,7 +1,12 @@
 package re.view.java;
 
+import static org.eclipse.jdt.core.dom.AST.JLS8;
+import static org.eclipse.jdt.core.dom.ASTParser.newParser;
+
 import java.util.stream.Stream;
 
+import org.eclipse.cdt.core.model.ICElement;
+import org.eclipse.cdt.core.model.ICElementVisitor;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -19,8 +24,15 @@ import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.core.dom.AST;
+import org.eclipse.jdt.core.dom.ASTParser;
+import org.eclipse.jdt.core.dom.CompilationUnit;
+import org.eclipse.jdt.core.dom.ImportDeclaration;
+import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
+import org.eclipse.jdt.core.dom.rewrite.ListRewrite;
 import org.eclipse.jdt.internal.core.JavaProject;
 import org.eclipse.jface.text.Document;
+import org.eclipse.text.edits.TextEdit;
 import org.eclipse.core.commands.IHandler;
 
 import re.factor.ReformatVisitor;
@@ -31,72 +43,46 @@ public class ReformatHandler extends AbstractHandler implements IHandler{
 	protected IProgressMonitor progressMonitor;
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-        // Get the root of the workspace
-        IWorkspace workspace = ResourcesPlugin.getWorkspace();
-        IWorkspaceRoot root = workspace.getRoot();
-        Stream<IProject> projects = Stream.of(root.getProjects()).filter(this::isOpenJavaNaturedProject);
-        var packages = projects.flatMap(this::isPackageOwnedByProject);
-        var classes = packages.flatMap(this::atusInsidePackage);
-        var members = classes.flatMap(this::methodsInClasses);
+	    IWorkspace workspace = ResourcesPlugin.getWorkspace();
+	    IWorkspaceRoot root = workspace.getRoot();
+	    Stream<IProject> projects = Stream.of(root.getProjects()).filter(JdtStream::isOpenJavaNaturedProject);
+	    var packages = projects.flatMap(JdtStream::isPackageOwnedByProject);
+	    var classes = packages.flatMap(JdtStream::atusInsidePackage);
+	    var members = classes.flatMap(JdtStream::methodsInClasses);
         members.forEach(this::printIMethodDetails);
-		return members;
-}
-    boolean isOpenJavaNaturedProject(IProject project) {
-    	System.out.println(project);
-    	try {
-			return 	 project.isOpen() && project.isAccessible() && project.isNatureEnabled("org.eclipse.jdt.core.javanature");
-		} catch (CoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return false;
+        classes.forEach(this::classInfo);
+//	    var rewriters = packages.flatMap(JdtStream::atusInsidePackage);
+
+//	    ASTRewrite rewriter = ASTRewrite.create(cu.getAST());
+//	        ListRewrite lrw = rewriter.getListRewrite(cu, CompilationUnit.IMPORTS_PROPERTY);
+//		    lrw.insertLast(id, null);
+//		    TextEdit edits = rewriter.rewriteAST(document, null);
+//		    edits.apply(document);
 		}
-    }
+	
+//	    assert "import java.util.List;\nimport java.util.Set;\nclass X {}\n".equals(document.get());
 
-    private Stream<IPackageFragment> isPackageOwnedByProject(IProject project) {
-    	
-    		try {
-    	    	var javaProject = JavaCore.create(project);
-				return Stream.of( javaProject.getPackageFragments()).filter(p -> {
-					try {
-						return p.getKind() == IPackageFragmentRoot.K_SOURCE;
-					} catch (JavaModelException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					return false;
-				});
-			} catch (JavaModelException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-    	
-    	return null;
-    }
-    private Stream<ICompilationUnit> atusInsidePackage(IPackageFragment mypackage){
-       try {
-		return Stream.of(mypackage.getCompilationUnits());
-	} catch (JavaModelException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
-	return null;
-   }
 
-    private Stream<IType> methodsInClasses(ICompilationUnit unit) {
-    	try {
-			return Stream.of(unit.getAllTypes());
+Stream<IType> RefactorModel() {
+	Document document = new Document();
+    ASTParser parser = newParser(AST.JLS17);
+    parser.setSource("import java.util.List;\nclass X {}\n".toCharArray());
+    parser.setSource(document.get().toCharArray());
+    CompilationUnit cu = (CompilationUnit) parser.createAST(null);
+    AST ast = cu.getAST();
+    ImportDeclaration id = ast.newImportDeclaration();
+    id.setName(ast.newName(new String[] {"java", "util", "Set"}));
+    return members;
+}
+    private void classInfo(ICompilationUnit unit){
+        Document doc;
+		try {
+			doc = new Document(unit.getSource());
+	        System.out.println("Has number of lines: " + doc.getNumberOfLines());
 		} catch (JavaModelException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return null;
-    }
-
-    private void xmethodsInClasses(ICompilationUnit unit) throws JavaModelException{
-        System.out.println("Source file " + unit.getElementName());
-        Document doc = new Document(unit.getSource());
-        System.out.println("Has number of lines: " + doc.getNumberOfLines());
-//        xprintIMethods(unit);
     }
 
     private void printIMethodDetails(IType type) {
@@ -116,27 +102,27 @@ public class ReformatHandler extends AbstractHandler implements IHandler{
 			e.printStackTrace();
 		}
     }
-    
-//	private ICElementVisitor visitor = new ICElementVisitor() {
-//		@Override
-//		public boolean visit(ICElement element) throws CoreException {
-//			if(element instanceof ITranslationUnit tu) {
-//				var atu = tu.getAST();
-//	            if(atu!=null) {
-//					var rewrite = ASTRewrite.create(atu);
-//					rewrite.removeAllComments(atu);
-//
-//		    		try {
-//		    			var changes = rewrite.rewriteAST();
-//		    				changes.perform(progressMonitor);
-//	    			} catch (CoreException e) {
-//	    				e.printStackTrace();
-//	    			}
-//				}
-//
-//			}
-//			return true;
-//		}
-//	};
 
-}
+	private ICElementVisitor visitor = new ICElementVisitor() {
+
+		@Override
+		public boolean visit(ICElement element) throws CoreException {
+			if(element instanceof ICompilationUnit tu) {
+				var atu = tu.getAST();
+	            if(atu!=null) {
+					var rewrite = ASTRewrite.create(atu);
+					rewrite.removeAllComments(atu);
+
+		    		try {
+		    			var changes = rewrite.rewriteAST();
+		    				changes.perform(progressMonitor);
+	    			} catch (CoreException e) {
+	    				e.printStackTrace();
+	    			}
+				}
+
+			}
+			return true;
+		}
+	}
+    }
