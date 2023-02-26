@@ -125,7 +125,7 @@
 			name="Validate">
 		</command>
 		<!-- copy qualified name -->
-		<command
+		<command 
 			id="org.eclipse.xtext.ui.editor.copyqualifiedname.EditorCopyQualifiedName"
 			categoryId="org.eclipse.ui.category.edit"
 			description="Copy the qualified name for the selected element"
@@ -434,16 +434,31 @@
 	
    <extension point="org.eclipse.ui.commands">
       <category id="re.view.category" name="Re Category"/>
-      <command categoryId="re.view.category" name="Refactor Command"  id="re.view.RefactorCommand"/>
+      <command categoryId="re.view.category" name="Refactor Command"  id="re.view.ccpp.RefactorCommand"/>
+      <command categoryId="re.view.category" name="Refactor Command"  id="re.view.ccpp.ReportCommand"/>
+      <command categoryId="re.view.category" name="Refactor Command"  id="re.view.ccpp.ReformatCommand"/>
+      <command categoryId="re.view.category" name="Refactor Command"  id="re.view.ccpp.IfdefCommand"/>
+      <command categoryId="re.view.category" name="Refactor Command"  id="re.view.ccpp.CommentCommand"/>
+      <command categoryId="re.view.category" name="Refactor Command"  id="re.view.java.RefactorCommand"/>
+      <command categoryId="re.view.category" name="Refactor Command"  id="re.view.java.ReportCommand"/>
+      <command categoryId="re.view.category" name="Refactor Command"  id="re.view.java.ReformatCommand"/>
+      <command categoryId="re.view.category" name="Refactor Command"  id="re.view.java.IfdefCommand"/>
+      <command categoryId="re.view.category" name="Refactor Command"  id="re.view.java.CommentCommand"/>
    </extension>
    <extension point="org.eclipse.ui.handlers">
-      <handler class="re.view.RefactorHandler" commandId="re.view.RefactorCommand"/>
-      <handler class="re.view.ReportHandler" commandId="re.view.ReportCommand"/>
-      <handler class="re.view.ReformatHandler" commandId="re.view.ReformatCommand"/>
-      <handler class="re.view.IfdefHandler" commandId="re.view.IfdefCommand"/>
-   </extension>
+      <handler class="re.view.java.RefactorHandler"      commandId="re.view.java.RefactorCommand"/>
+      <handler class="re.view.java.ReportHandler"        commandId="re.view.java.ReportCommand"/>
+      <handler class="re.view.java.ReformatHandler"      commandId="re.view.java.ReformatCommand"/>
+      <handler class="re.view.java.IfdefHandler"         commandId="re.view.java.IfdefCommand"/>
+      <handler class="re.view.java.CommentHandler"       commandId="re.view.java.CommentCommand"/>
+      <handler class="re.view.ccpp.RefactorHandler"      commandId="re.view.ccpp.RefactorCommand"/>
+      <handler class="re.view.ccpp.ReportHandler"        commandId="re.view.ccpp.ReportCommand"/>
+      <handler class="re.view.ccpp.ReformatHandler"      commandId="re.view.ccpp.ReformatCommand"/>
+      <handler class="re.view.ccpp.IfdefHandler"         commandId="re.view.ccpp.IfdefCommand"/>
+      <handler class="re.view.ccpp.CommentHandler"       commandId="re.view.ccpp.CommentCommand"/>
++   </extension>
    <extension point="org.eclipse.ui.bindings">
-      <key commandId="re.view.RefactorCommand"
+      <key commandId="re.view.ccpp.RefactorCommand"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
             contextId="org.eclipse.ui.contexts.window"
             sequence="M1+6">
@@ -453,38 +468,24 @@
          point="org.eclipse.ui.menus">
       <menuContribution locationURI="menu:org.eclipse.ui.main.menu?after=additions">
          <menu id="re.view.Menu" label="Refactor" mnemonic="M">
-            <command commandId="re.view.RefactorCommand" id="re.view.RefactorCommand" mnemonic="R">
-            </command>
+            <command commandId="re.view.ccpp.RefactorCommand" id="re.view.ccpp.RefactorCommand" mnemonic="R"/>
          </menu>
       </menuContribution>
       <menuContribution
             locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
-         <toolbar
-               id="re.view.Toolbar">
-            <command
-                  id="re.view.RefactorCommand"
-                  commandId="re.view.RefactorCommand"
-                  icon="resources/refactor.png"
-                  tooltip="refactor at function level">
-            </command>
-            <command
-                  id="re.view.ReformatCommand"
-                  commandId="re.view.ReformatCommand"
-                  icon="resources/reformat.png"
-                  tooltip="reformart at file level">
-            </command>
-            <command
-                  id="re.view.ReportCommand"
-                  commandId="re.view.ReportCommand"
-                  icon="resources/report.png"
-                  tooltip="report at wokrspace level">
-            </command>
-            <command
-                  id="re.view.IfdefCommand"
-                  commandId="re.view.IfdefCommand"
-                  icon="resources/ifdef.png"
-                  tooltip="remove ifdef at wokrspace level">
-            </command>
+         <toolbar    id="re.view.ccpp.Toolbar">
+            <command id="re.view.ccpp.RefactorCommand" commandId="re.view.ccpp.RefactorCommand" icon="resources/refactor.png" tooltip="refactor at function level"></command>
+            <command id="re.view.ccpp.ReformatCommand" commandId="re.view.ccpp.ReformatCommand" icon="resources/reformat.png" tooltip="reformart at file level"></command>
+            <command id="re.view.ccpp.ReportCommand"   commandId="re.view.ccpp.ReportCommand"   icon="resources/report.png"   tooltip="report at wokrspace level"></command>
+            <command id="re.view.ccpp.IfdefCommand"    commandId="re.view.ccpp.IfdefCommand"    icon="resources/ifdef.png"    tooltip="remove ifdef at wokrspace level"></command>
+            <command id="re.view.ccpp.CommentCommand"  commandId="re.view.ccpp.CommentCommand"  icon="resources/comment.png"  tooltip="format comment"></command>
+         </toolbar>
+         <toolbar    id="re.view.java.Toolbar">
+            <command id="re.view.java.RefactorCommand" commandId="re.view.java.RefactorCommand" icon="resources/refactor.png" tooltip="refactor at function level"></command>
+            <command id="re.view.java.ReformatCommand" commandId="re.view.java.ReformatCommand" icon="resources/reformat.png" tooltip="reformart at file level"></command>
+            <command id="re.view.java.ReportCommand"   commandId="re.view.java.ReportCommand"   icon="resources/report.png"   tooltip="report at wokrspace level"></command>
+            <command id="re.view.java.IfdefCommand"    commandId="re.view.java.IfdefCommand"    icon="resources/ifdef.png"    tooltip="remove ifdef at wokrspace level"></command>
+            <command id="re.view.java.CommentCommand"  commandId="re.view.java.CommentCommand"  icon="resources/comment.png"  tooltip="format comment"></command>
          </toolbar>
       </menuContribution>
    </extension>

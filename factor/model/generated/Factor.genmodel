@@ -6,8 +6,19 @@
     copyrightFields="false" runtimeVersion="2.20">
   <genPackages prefix="Factor" basePackage="re" disposableProviderFactory="true" fileExtensions="refactor"
       ecorePackage="Factor.ecore#/">
-    <genClasses ecoreClass="Factor.ecore#//Model">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Factor.ecore#//Model/greetings"/>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="Factor.ecore#//Statement">
+      <genEnumLiterals ecoreEnumLiteral="Factor.ecore#//Statement/While"/>
+      <genEnumLiterals ecoreEnumLiteral="Factor.ecore#//Statement/If"/>
+      <genEnumLiterals ecoreEnumLiteral="Factor.ecore#//Statement/Fun"/>
+      <genEnumLiterals ecoreEnumLiteral="Factor.ecore#//Statement/Do"/>
+    </genEnums>
+    <genClasses ecoreClass="Factor.ecore#//C">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Factor.ecore#//C/greetings"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Factor.ecore#//C/header"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Factor.ecore#//C/content"/>
+    </genClasses>
+    <genClasses ecoreClass="Factor.ecore#//Content">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Factor.ecore#//Content/statements"/>
     </genClasses>
     <genClasses ecoreClass="Factor.ecore#//Greeting">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Factor.ecore#//Greeting/name"/>
