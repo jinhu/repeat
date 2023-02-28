@@ -1,40 +1,34 @@
 package re.view.java;
 
-import static org.eclipse.jdt.core.dom.AST.JLS8;
 import static org.eclipse.jdt.core.dom.ASTParser.newParser;
 
 import java.util.stream.Stream;
 
-import org.eclipse.cdt.core.model.ICElement;
-import org.eclipse.cdt.core.model.ICElementVisitor;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.commands.IHandler;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jdt.core.IClassFile;
 import org.eclipse.jdt.core.ICompilationUnit;
-import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IMethod;
-import org.eclipse.jdt.core.IPackageFragment;
-import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTParser;
-import org.eclipse.jdt.core.dom.CompilationUnit;
-import org.eclipse.jdt.core.dom.ImportDeclaration;
-import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
-import org.eclipse.jdt.core.dom.rewrite.ListRewrite;
-import org.eclipse.jdt.internal.core.JavaProject;
+import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jface.text.Document;
-import org.eclipse.text.edits.TextEdit;
-import org.eclipse.core.commands.IHandler;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.handlers.HandlerUtil;
 
+import re.factor.Helper;
 import re.factor.ReformatVisitor;
 
 public class ReformatHandler extends AbstractHandler implements IHandler{
@@ -43,15 +37,19 @@ public class ReformatHandler extends AbstractHandler implements IHandler{
 	protected IProgressMonitor progressMonitor;
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
+		var refactoring = getRefactoring(event);
 	    IWorkspace workspace = ResourcesPlugin.getWorkspace();
 	    IWorkspaceRoot root = workspace.getRoot();
+	    var project=root.getProject("java-code-from-last-milinium");
+	    var proj = JavaCore.create(project);
 	    Stream<IProject> projects = Stream.of(root.getProjects()).filter(JdtStream::isOpenJavaNaturedProject);
 	    var packages = projects.flatMap(JdtStream::isPackageOwnedByProject);
 	    var classes = packages.flatMap(JdtStream::atusInsidePackage);
 	    var members = classes.flatMap(JdtStream::methodsInClasses);
         members.forEach(this::printIMethodDetails);
-        classes.forEach(this::classInfo);
+//        classes.forEach(this::classInfo);
 //	    var rewriters = packages.flatMap(JdtStream::atusInsidePackage);
+		return members;
 
 //	    ASTRewrite rewriter = ASTRewrite.create(cu.getAST());
 //	        ListRewrite lrw = rewriter.getListRewrite(cu, CompilationUnit.IMPORTS_PROPERTY);
@@ -63,17 +61,24 @@ public class ReformatHandler extends AbstractHandler implements IHandler{
 //	    assert "import java.util.List;\nimport java.util.Set;\nclass X {}\n".equals(document.get());
 
 
-Stream<IType> RefactorModel() {
-	Document document = new Document();
-    ASTParser parser = newParser(AST.JLS17);
-    parser.setSource("import java.util.List;\nclass X {}\n".toCharArray());
-    parser.setSource(document.get().toCharArray());
-    CompilationUnit cu = (CompilationUnit) parser.createAST(null);
-    AST ast = cu.getAST();
-    ImportDeclaration id = ast.newImportDeclaration();
-    id.setName(ast.newName(new String[] {"java", "util", "Set"}));
-    return members;
-}
+	private ASTVisitor getRefactoring(ExecutionEvent event) throws ExecutionException {
+		var window = HandlerUtil.getActiveWorkbenchWindowChecked(event);
+		var selectionService = window.getSelectionService();
+//		IWorkbenchPart workbenchPart = window.getActivePage().getActivePart(); 
+//		IEditorInput text = workbenchPart.getSite().getPage().getActiveEditor().getEditorInput();
+	    ASTParser parser = newParser(AST.JLS17);
+//		var file = (IClassFile) workbenchPart.getSite().getPage().getActiveEditor().getEditorInput().getAdapter(IFile.class);
+//		if (file == null) return null;
+	    parser.setSource( selectionService.getSelection().toString().toCharArray());
+
+
+//        parser.setResolveBindings(true);
+	    var atu =parser.createAST(null);
+		var refactorings = new JavaRefactorings();
+		atu.accept(refactorings);
+		return refactorings;
+	}
+
     private void classInfo(ICompilationUnit unit){
         Document doc;
 		try {
@@ -103,26 +108,4 @@ Stream<IType> RefactorModel() {
 		}
     }
 
-	private ICElementVisitor visitor = new ICElementVisitor() {
-
-		@Override
-		public boolean visit(ICElement element) throws CoreException {
-			if(element instanceof ICompilationUnit tu) {
-				var atu = tu.getAST();
-	            if(atu!=null) {
-					var rewrite = ASTRewrite.create(atu);
-					rewrite.removeAllComments(atu);
-
-		    		try {
-		    			var changes = rewrite.rewriteAST();
-		    				changes.perform(progressMonitor);
-	    			} catch (CoreException e) {
-	    				e.printStackTrace();
-	    			}
-				}
-
-			}
-			return true;
-		}
-	}
-    }
+}
