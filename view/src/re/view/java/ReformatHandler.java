@@ -16,14 +16,20 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.IClassFile;
 import org.eclipse.jdt.core.ICompilationUnit;
+import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.dom.AST;
+import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.ASTVisitor;
+import org.eclipse.jdt.core.dom.CompilationUnit;
+import org.eclipse.jdt.core.dom.SimpleName;
+import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 import org.eclipse.jface.text.Document;
+import org.eclipse.text.edits.TextEditGroup;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.handlers.HandlerUtil;
@@ -46,16 +52,13 @@ public class ReformatHandler extends AbstractHandler implements IHandler{
 	    var packages = projects.flatMap(JdtStream::isPackageOwnedByProject);
 	    var classes = packages.flatMap(JdtStream::atusInsidePackage);
 	    var members = classes.flatMap(JdtStream::methodsInClasses);
-        members.forEach(this::printIMethodDetails);
-//        classes.forEach(this::classInfo);
+//        members.forEach(this::printIMethodDetails);
+//        classes.forEach(this::renameClass);
 //	    var rewriters = packages.flatMap(JdtStream::atusInsidePackage);
+	    members.forEach(this::renameClass);
+//      
 		return members;
 
-//	    ASTRewrite rewriter = ASTRewrite.create(cu.getAST());
-//	        ListRewrite lrw = rewriter.getListRewrite(cu, CompilationUnit.IMPORTS_PROPERTY);
-//		    lrw.insertLast(id, null);
-//		    TextEdit edits = rewriter.rewriteAST(document, null);
-//		    edits.apply(document);
 		}
 	
 //	    assert "import java.util.List;\nimport java.util.Set;\nclass X {}\n".equals(document.get());
@@ -95,11 +98,11 @@ public class ReformatHandler extends AbstractHandler implements IHandler{
 		try {
 			methods = type.getMethods();
 	        for (IMethod method : methods) {
-
-	            System.out.println("Method name " + method.getElementName());
-	            System.out.println("Signature " + method.getSignature());
-	            System.out.println("Return Type " + method.getReturnType());
-
+	        	if(method.getElementName().contains("_")) {
+	        		System.out.println("Method name " + method.getElementName());
+//	        		System.out.println("Signature " + method.getSignature());
+//	        		System.out.println("Return Type " + method.getReturnType());
+	        	}
 	        }
 
 		} catch (JavaModelException e) {
@@ -107,5 +110,21 @@ public class ReformatHandler extends AbstractHandler implements IHandler{
 			e.printStackTrace();
 		}
     }
+
+	private void renameClass(IType node) {
+    	
+	    AST ast = node.getCompilationUnit().re;
+		ASTRewrite rewriter = ASTRewrite.create(ast);
+	    
+		SimpleName newClassName = ast.newSimpleName("TestBundle");//(IJavaElement) node).getElementName());
+		TextEditGroup edit = new TextEditGroup("ref");
+		rewriter.replace((ASTNode) node, newClassName, edit);
+
+//	    lrw.insertLast(id, null);
+//	    TextEdit edits = rewriter.rewriteAST(document, null);
+//		rewriter.rewriteAST();
+	    //edits.apply(document);
+
+	}
 
 }
