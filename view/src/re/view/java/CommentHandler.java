@@ -22,9 +22,9 @@ import org.eclipse.emf.common.util.BasicMonitor.Printing;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.handlers.HandlerUtil;
 
-import re.factor.Helper;
-import re.factor.Refactorings;
-import re.factor.TextMatcher;
+import re.factor.ccpp.Helper;
+import re.factor.ccpp.Refactorings;
+import re.factor.ccpp.TextMatcher;
 
 public class CommentHandler extends AbstractHandler implements ICElementVisitor {
 

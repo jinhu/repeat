@@ -37,7 +37,7 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.CoreException;
 
-import re.factor.MacroMatcher;
+import re.factor.ccpp.MacroMatcher;
 
 public class IfdefHandler extends AbstractHandler implements ICElementVisitor {
 

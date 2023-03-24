@@ -34,8 +34,8 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.handlers.HandlerUtil;
 
-import re.factor.Helper;
 import re.factor.ReformatVisitor;
+import re.factor.ccpp.Helper;
 
 public class ReformatHandler extends AbstractHandler implements IHandler{
 
@@ -113,7 +113,9 @@ public class ReformatHandler extends AbstractHandler implements IHandler{
 
 	private void renameClass(IType node) {
     	
-	    AST ast = node.getCompilationUnit().re;
+		
+AST ast = null;
+		//	    AST ast = node.getCompilationUnit();
 		ASTRewrite rewriter = ASTRewrite.create(ast);
 	    
 		SimpleName newClassName = ast.newSimpleName("TestBundle");//(IJavaElement) node).getElementName());

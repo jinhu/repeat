@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+  <extension point="org.eclipse.ui.popupMenus">
+    <!-- put a context menu item into the menu of standard text editors.
+         If the properties editor had an own context menu id, we could
+         target this more specifically. This way, we must have the
+         refactoring itself decide whether the operation can run.
+      -->
+    <viewerContribution targetID="#TextEditorContext" 
+                        id="de.leiffrenzel.propertyref.renameProperty">
+      <action label="%renameProperty_label"
+              class="de.leiffrenzel.propertyref.ui.actions.RenameProperty" 
+              menubarPath="additions"
+              id="de.leiffrenzel.propertyref.ui.actions.RenameProperty"/>
+    </viewerContribution>
+  </extension>
+</plugin>

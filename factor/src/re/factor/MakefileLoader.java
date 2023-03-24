@@ -15,6 +15,8 @@ import org.eclipse.cdt.core.dom.ast.cpp.ICPPASTFunctionDefinition;
 import org.eclipse.cdt.core.parser.ScannerInfo;
 import org.eclipse.cdt.internal.core.dom.parser.cpp.CPPASTFunctionDefinition;
 
+import re.factor.ccpp.Helper;
+
 public class MakefileLoader  implements Appl {
 
     @Override

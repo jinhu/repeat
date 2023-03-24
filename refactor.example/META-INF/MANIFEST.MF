@@ -1,0 +1,20 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Version: 1.0.0.qualifier
+Automatic-Module-Name: refactor.example
+Bundle-RequiredExecutionEnvironment: JavaSE-18
+Bundle-Name: Property Refactoring
+Bundle-SymbolicName: de.leiffrenzel.propertyref; singleton := true
+Bundle-ClassPath: propertyref.jar
+Bundle-Activator: de.leiffrenzel.propertyref.ui.PropertyrefPlugin
+Bundle-Vendor: Leif Frenzel
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.core.resources,
+ org.eclipse.core.runtime,
+ org.eclipse.jface.text,
+ org.eclipse.ltk.core.refactoring,
+ org.eclipse.ltk.ui.refactoring,
+ org.eclipse.ui,
+ org.eclipse.ui.ide,
+ org.eclipse.ui.workbench.texteditor
+Eclipse-AutoStart: true

@@ -70,7 +70,7 @@ public class JavaRefactorings extends ASTVisitor {
 	
 
 	public void process(ASTRewrite rewrite, Block code) {
-		var snippet = new JavaSnippetMatcher(code, rewrite);
+		var snippet = new SnippetMatcher(code, rewrite);
 //		ArrayList<Change> changes = new ArrayList<>();
 		for (var replacement : replacements) {
 			snippet.replace(replacement);

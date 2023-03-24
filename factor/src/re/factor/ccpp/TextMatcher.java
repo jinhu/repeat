@@ -1,4 +1,4 @@
-package re.factor;
+package re.factor.ccpp;
 
 import org.eclipse.cdt.core.dom.ast.ASTVisitor;
 import org.eclipse.cdt.core.dom.ast.IASTCompoundStatement;

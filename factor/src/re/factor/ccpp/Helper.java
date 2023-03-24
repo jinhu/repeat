@@ -1,4 +1,4 @@
-package re.factor;
+package re.factor.ccpp;
 
 import org.eclipse.cdt.core.dom.ast.IASTNode;
 import org.eclipse.cdt.core.dom.ast.IASTTranslationUnit;
@@ -11,6 +11,8 @@ import org.eclipse.cdt.internal.core.parser.IMacroDictionary;
 import org.eclipse.cdt.internal.core.parser.scanner.InternalFileContent;
 import org.eclipse.cdt.internal.core.parser.scanner.InternalFileContentProvider;
 import org.eclipse.core.runtime.CoreException;
+
+import re.factor.Appl;
 
 import java.io.IOException;
 import java.util.List;

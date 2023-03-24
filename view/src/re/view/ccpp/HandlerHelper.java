@@ -28,8 +28,8 @@ import org.eclipse.emf.common.util.BasicMonitor.Printing;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.handlers.HandlerUtil;
 
-import re.factor.Helper;
-import re.factor.Refactorings;
+import re.factor.ccpp.Helper;
+import re.factor.ccpp.Refactorings;
 
 public class HandlerHelper {
 	static public void visit(ASTVisitor visitor, ICElement element, IProgressMonitor progressMonitor) throws CoreException { 

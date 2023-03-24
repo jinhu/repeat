@@ -8,6 +8,8 @@ import org.eclipse.cdt.core.dom.ast.gnu.cpp.GPPLanguage;
 import org.eclipse.cdt.core.index.IIndex;
 import org.eclipse.cdt.core.parser.*;
 
+import re.factor.ccpp.Helper;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

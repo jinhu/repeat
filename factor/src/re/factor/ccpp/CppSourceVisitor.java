@@ -1,4 +1,4 @@
-package re.factor;
+package re.factor.ccpp;
 
 import org.eclipse.cdt.core.dom.ast.IASTTranslationUnit;
 import org.eclipse.cdt.core.dom.rewrite.ASTRewrite;

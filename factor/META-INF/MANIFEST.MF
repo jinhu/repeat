@@ -19,13 +19,14 @@ Require-Bundle: org.eclipse.xtext,
  org.eclipse.cdt.core
 Export-Package: re,
  re.factor,
+ re.factor.ccpp,
  re.factor.impl,
  re.factor.util,
+ re.generator,
  re.parser.antlr,
  re.parser.antlr.internal,
  re.scoping,
  re.serializer,
  re.services,
- re.validation,
- re.generator
+ re.validation
 Import-Package: org.apache.log4j
